@@ -1,6 +1,6 @@
 {
   "name": "@cblx.br/openapi-typescript",
-  "version": "1.0.0",
+  "version": "0.0.0-dev",
   "description": "Typescript model and client generator for OpenApi",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,9 @@
     "url": "https://github.com/cblx/openapi-typescript/issues"
   },
   "homepage": "https://github.com/cblx/openapi-typescript#readme",
+  "bin": {
+    "openapi-typescript": "./index.js"
+  },
   "dependencies": {
     "change-case": "4.1.1",
     "commander": "4.0.1",
