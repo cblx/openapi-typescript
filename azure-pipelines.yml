@@ -1,0 +1,28 @@
+resources:
+ repositories:
+   - repository: templates
+     type: git
+     name: Cblx.Pipelines/templates
+
+name: $(Build.SourceBranch)$(rev:.r)
+trigger:
+  - releases/*
+
+variables:
+  rev: $[counter(variables['Build.SourceBranch'], 0)]
+
+stages:
+# BUILD #####################################
+- stage: Build
+  displayName: Build
+  jobs:
+  #set build name
+  - template: "set-build-name-job.yml@templates"
+  #pack and publish artifact
+  - template: "npm-pack.yml@templates"
+
+# DEPLOY ###################################
+#publish to cblx infra
+- template: publish-to-npm.yml@templates
+parameters:
+  customFeed: ''
