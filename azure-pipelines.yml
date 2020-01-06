@@ -1,0 +1,27 @@
+resources:
+ repositories:
+   - repository: templates
+     type: git
+     name: Cblx.Pipelines/templates
+
+name: $(Build.SourceBranch)$(rev:.r)
+trigger:
+  - releases/*
+
+stages:
+# BUILD AND DEPLOY #####################################
+- stage: BuildDeploy
+  displayName: BuildAndDeploy
+  jobs:
+  #set build name
+  - template: "set-build-name-job.yml@templates"
+  - job: Deploy
+    dependsOn: SetBuildName
+    steps:
+    - script: npm version $(Build.BuildNumber) --no-git-tag-version
+    - task: Npm@1
+      inputs:
+        command: 'publish'
+        publishEndpoint: 'npmjs.org em nome de guilherme'
+  
+  
