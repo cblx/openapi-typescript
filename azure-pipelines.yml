@@ -25,4 +25,4 @@ stages:
 #publish to cblx infra
 - template: publish-to-npm.yml@templates
 parameters:
-  customFeed: 'd438802f-ab00-4d2e-940c-8c7593e1aad5'
+  publishEndpoint: 'npmjs.org em nome de guilherme'
