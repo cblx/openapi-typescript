@@ -83,9 +83,14 @@ async function execute(config) {
             content += events.beforeWriteServiceClass();
         }
 
+        let connectorDecorator = '';
+        if(events.createConnectorDecorator){
+            connectorDecorator = events.createConnectorDecorator();
+        }
+
         content += `export class ${c}Client {\n`;
         //content += `    private api = '${c.toLowerCase()}';\n`;
-        content += `    constructor(private connector: { request: (method: string, path: string, parameters: any, body: any) => Promise<any> }) {}\n`;
+        content += `    constructor(${connectorDecorator}private connector: { request: (method: string, path: string, parameters: any, body: any) => Promise<any> }) {}\n`;
         for (let a in client.actions) {
             let action = client.actions[a];
             let returnType = 'void';
