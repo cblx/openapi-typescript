@@ -8,21 +8,20 @@ name: $(Build.SourceBranch)$(rev:.r)
 trigger:
   - releases/*
 
-variables:
-  rev: $[counter(variables['Build.SourceBranch'], 0)]
-
 stages:
-# BUILD #####################################
-- stage: Build
-  displayName: Build
+# BUILD AND DEPLOY #####################################
+- stage: BuildDeploy
+  displayName: BuildAndDeploy
   jobs:
   #set build name
   - template: "set-build-name-job.yml@templates"
-  #pack and publish artifact
-  - template: "npm-pack.yml@templates"
-
-# DEPLOY ###################################
-#publish to cblx infra
-- template: publish-to-npm.yml@templates
-parameters:
-  publishEndpoint: 'npmjs.org em nome de guilherme'
+  - job: Deploy
+    dependsOn: SetBuildName
+    steps:
+    - script: npm version $(Build.BuildNumber) --no-git-tag-version
+    - task: Npm@1
+      inputs:
+        command: 'publish'
+        publishEndpoint: 'npmjs.org em nome de guilherme'
+  
+  
