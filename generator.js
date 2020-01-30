@@ -238,6 +238,10 @@ class ResolutionContext {
     }
 
     resolve(schema){
+        if(schema.allOf){
+            schema.$ref = schema.allOf[0].$ref;
+        }
+        
         if(schema.$ref){
             let typeName = schema.$ref.split('/').reverse()[0];
 
