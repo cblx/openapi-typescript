@@ -204,6 +204,8 @@ async function execute(config) {
             }
             content += '}\n\n';
 
+            content += `const schema = ${JSON.stringify(type, null, 4)};\n\n`
+
             //Crio um tipo fisico para referenciarmos names
             content += `export class ${typeName} {\n`;
             content += `    static '$' = '${typeName}';\n`;
@@ -215,6 +217,7 @@ async function execute(config) {
             for(let p in type.properties){
                 content += `    static '$${p}' = '${p}';\n`;
             }
+            content += `    static schema = schema;\n`;
             content += `}`;
         }
 
