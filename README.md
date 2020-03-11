@@ -1,8 +1,10 @@
 # openapi-typescript
 openapi client generator for typescript
 
+`npm install @cblx.br/openapi-typescript --save-dev`
 
-openapi-typescript.config.js
+
+create an openapi-typescript.config.js
 
 ```
 var config = {
@@ -12,9 +14,14 @@ var config = {
 
 module.exports = config;
 ```
+
+execute it:
+
+`npx openapi-typescript`
+
 -------------
 
-Angular suggestion:
+Angular example:
 
 create an app-connector.ts
 
@@ -38,4 +45,23 @@ export class AppConnector implements OpenApiConnector {
     }
 }
 
+```
+openapi-typescript.config.js
+
+```
+var config = {
+    url: "<url>/swagger.json",
+    outputDir: "./src/client",
+    events: {
+        beforeWriteServiceClass: () => {
+            var content = '';
+            content += `import { Injectable } from '@angular/core';\n`;
+            content += `import { AppConnector } from 'app/app-connector';\n`;
+            content += `@Injectable({ providedIn: 'root', deps: [AppConnector] })\n`;
+            return content;
+        }
+    }
+};
+
+module.exports = config;
 ```
