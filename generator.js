@@ -71,14 +71,8 @@ async function execute(config) {
 
         let content = '';
 
-        //content += `import { WebTypedInvoker } from '@guimabdo/webtyped-common';\n`;
-
-        //Angular specific ///////////////////////
-        //content += `import { Injectable } from '@angular/core';\n`;
-        //content += `@Injectable({ providedIn: 'root', deps: [WebTypedInvoker] })\n`;
-        //content += `@Injectable({ providedIn: 'root' })\n`;
-        /////////////////////////////////////////
-
+        content += `import { OpenApiConnector } from '@cblx.br/openapi-typescript';\n`;
+        
         if(events.beforeWriteServiceClass){
             content += events.beforeWriteServiceClass();
         }
@@ -90,7 +84,7 @@ async function execute(config) {
 
         content += `export class ${c}Client {\n`;
         //content += `    private api = '${c.toLowerCase()}';\n`;
-        content += `    constructor(${connectorDecorator}private connector: { request: (method: string, path: string, parameters: any, body: any) => Promise<any> }) {}\n`;
+        content += `    constructor(${connectorDecorator}private connector: OpenApiConnector) {}\n`;
         for (let a in client.actions) {
             let action = client.actions[a];
             let returnType = 'void';
