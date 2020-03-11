@@ -40,14 +40,14 @@ async function execute(config) {
                     actions: {}
                 };
             }
-            
+
             //Crio o caminho relativo do endpoint
             //Determino o path relativo
             // action.path = p.replace(`/${clientName}`, '');
 
             action.path = p;
-            if(action.path.startsWith('/')){
-                 action.path = action.path.substring(1);
+            if (action.path.startsWith('/')) {
+                action.path = action.path.substring(1);
             }
 
             action.httpMethod = a;
@@ -72,13 +72,13 @@ async function execute(config) {
         let content = '';
 
         content += `import { OpenApiConnector } from '@cblx.br/openapi-typescript';\n`;
-        
-        if(events.beforeWriteServiceClass){
+
+        if (events.beforeWriteServiceClass) {
             content += events.beforeWriteServiceClass();
         }
 
         let connectorDecorator = '';
-        if(events.createConnectorDecorator){
+        if (events.createConnectorDecorator) {
             connectorDecorator = events.createConnectorDecorator();
         }
 
@@ -119,8 +119,8 @@ async function execute(config) {
             }
 
             let signatureParts = [];
-            if(bodySignature){ signatureParts.push(bodySignature); }
-            if(parametersSignature){ signatureParts.push(parametersSignature); }
+            if (bodySignature) { signatureParts.push(bodySignature); }
+            if (parametersSignature) { signatureParts.push(parametersSignature); }
             let signature = signatureParts.join(', ');
 
 
@@ -155,7 +155,7 @@ async function execute(config) {
             // //Retorno esperado, neste projeto usamos direto Promise,  no lugar de Observables
             // content += `            { name: 'Promise' }\n`;
             // content += `        );\n`;
-            
+
             content += `    }\n`;
         }
         content += `}\n`;
@@ -179,7 +179,7 @@ async function execute(config) {
         let typeName = c.replace('[]', 'Array');
 
         //let imports = {};
-        let context = new ResolutionContext('model');
+        let context = new ResolutionContext('model', typeName);
         let fileName = `${changeCase.paramCase(typeName)}.ts`;
         let content = '';
         let type = json.components.schemas[c];
@@ -191,7 +191,7 @@ async function execute(config) {
         } else {
             //Crio a interface
             content += `export interface ${typeName} {\n`;
-            for(let p in type.properties){
+            for (let p in type.properties) {
                 let prop = type.properties[p];
                 let propTypeName = context.resolve(prop);
                 content += `    '${p}'${prop.nullable ? '?' : ''}: ${propTypeName};\n`;
@@ -208,7 +208,7 @@ async function execute(config) {
             //podem conflitar com coisas nativas do javascript.
             //Por exemplo, o campo 'name' conflitaria com Function.name,
             //que está em toda classe.
-            for(let p in type.properties){
+            for (let p in type.properties) {
                 content += `    static '$${p}' = '${p}';\n`;
             }
             content += `    static schema = schema;\n`;
@@ -225,27 +225,32 @@ async function execute(config) {
 }
 
 class ResolutionContext {
-    constructor(scope){
+    constructor(scope, typeName) {
         //this.path = path;
         this.imports = {};
         this.importsPath = '';
-        if(scope == 'client'){
+        this.typeName = typeName;
+        if (scope == 'client') {
             this.importsPath = '/models';
         }
     }
 
-    resolve(schema){
-        if(schema.allOf){
+    resolve(schema) {
+        if (schema.allOf) {
             schema.$ref = schema.allOf[0].$ref;
         }
-        
-        if(schema.$ref){
+
+        if (schema.$ref) {
             let typeName = schema.$ref.split('/').reverse()[0];
 
-             //Alguns tipos array virão com [], quando dentro de generics
-             typeName = typeName.replace('[]', 'Array');
+            // Avoid self referencing importing
+            if (this.typeName != typeName) {
 
-            this.imports[`import { ${typeName} } from '.${this.importsPath}/${changeCase.paramCase(typeName)}';\n`] = true;
+                //Alguns tipos array virão com [], quando dentro de generics
+                typeName = typeName.replace('[]', 'Array');
+
+                this.imports[`import { ${typeName} } from '.${this.importsPath}/${changeCase.paramCase(typeName)}';\n`] = true;
+            }
             return typeName;
         }
 
