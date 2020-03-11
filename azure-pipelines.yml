@@ -1,9 +1,3 @@
-resources:
- repositories:
-   - repository: templates
-     type: git
-     name: Cblx.Pipelines/templates
-
 name: $(Build.SourceBranch)$(rev:.r)
 trigger:
   - releases/*
@@ -14,7 +8,15 @@ stages:
   displayName: BuildAndDeploy
   jobs:
   #set build name
-  - template: "set-build-name-job.yml@templates"
+  - job: SetBuildName
+    variables:
+        rev: $[counter(variables['Build.SourceBranch'], 0)]
+    steps:
+      - script: echo "##vso[build.updatebuildnumber]$(Build.SourceBranchName).$(Rev)"
+        condition: contains(variables['Build.SourceBranch'], '/releases/')
+      - script: echo "##vso[build.updatebuildnumber]0.0.0-$(Build.SourceBranchName).$(Rev)"
+        condition: not(contains(variables['Build.SourceBranch'], '/releases/'))
+  # deploy
   - job: Deploy
     dependsOn: SetBuildName
     steps:
