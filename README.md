@@ -52,13 +52,16 @@ openapi-typescript.config.js
 var config = {
     url: "<url>/swagger.json",
     outputDir: "./src/client",
-    events: {
+     events: {
         beforeWriteServiceClass: () => {
             var content = '';
-            content += `import { Injectable } from '@angular/core';\n`;
+            content += `import { Inject, Injectable } from '@angular/core';\n`;
             content += `import { AppConnector } from 'app/app-connector';\n`;
-            content += `@Injectable({ providedIn: 'root', deps: [AppConnector] })\n`;
+            content += `@Injectable({ providedIn: 'root' })\n`;
             return content;
+        },
+        createConnectorDecorator: () => {
+            return `@Inject(AppConnector) `;
         }
     }
 };
