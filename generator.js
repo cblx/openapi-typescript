@@ -62,6 +62,8 @@ async function execute(config) {
         }
     }
 
+    const allFiles = [];
+
     //Percorro os clients, criando seus arquivos
     for (let c in clients) {
         let fileName = `${changeCase.paramCase(c)}.client.ts`;
@@ -164,7 +166,9 @@ async function execute(config) {
             content = i + content;
         }
 
-        fs.writeFileSync(path.join(targetDir, fileName), content);
+        let filePath = path.join(targetDir, fileName);
+        fs.writeFileSync(filePath, content);
+        allFiles.push(filePath);
     }
 
 
@@ -220,8 +224,16 @@ async function execute(config) {
             content = i + content;
         }
 
-        fs.writeFileSync(path.join(modelDir, fileName), content);
+        let filePath = path.join(modelDir, fileName);
+        fs.writeFileSync(filePath, content);
+        allFiles.push(filePath);
     }
+
+    let indexContent = '';
+    for(let filePath of allFiles){
+        indexContent += `export * from '${filePath.replace('.ts', '').replace(/\\/g, '/')}';\n`;
+    }
+    fs.writeFileSync(path.join(targetDir, 'index.ts'), indexContent);
 }
 
 class ResolutionContext {
