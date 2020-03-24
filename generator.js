@@ -73,7 +73,7 @@ async function execute(config) {
 
         let content = '';
 
-        content += `import { OpenApiConnector } from '@cblx.br/openapi-typescript';\n`;
+        content += `import { OpenApiConnector } from '@cblx-br/openapi-typescript';\n`;
 
         if (events.beforeWriteServiceClass) {
             content += events.beforeWriteServiceClass();
