@@ -1,7 +1,7 @@
 # openapi-typescript
 openapi client generator for typescript
 
-`npm install @cblx.br/openapi-typescript --save-dev`
+`npm install @cblx-br/openapi-typescript --save-dev`
 
 
 create an openapi-typescript.config.js
@@ -28,7 +28,7 @@ create an app-connector.ts
 ```
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { OpenApiConnector } from '@cblx.br/openapi-typescript';
+import { OpenApiConnector } from '@cblx-br/openapi-typescript';
 
 @Injectable({
     providedIn: 'root'
