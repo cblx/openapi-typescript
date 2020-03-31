@@ -62,7 +62,7 @@ async function execute(config) {
         }
     }
 
-    const allFiles = [];
+    const allRelativeFiles = [];
 
     //Percorro os clients, criando seus arquivos
     for (let c in clients) {
@@ -186,7 +186,7 @@ async function execute(config) {
 
         let filePath = path.join(targetDir, fileName);
         fs.writeFileSync(filePath, content);
-        allFiles.push(filePath);
+        allRelativeFiles.push('./' + fileName);
     }
 
 
@@ -244,11 +244,11 @@ async function execute(config) {
 
         let filePath = path.join(modelDir, fileName);
         fs.writeFileSync(filePath, content);
-        allFiles.push(filePath);
+        allRelativeFiles.push('./models/' + fileName);
     }
 
     let indexContent = '';
-    for (let filePath of allFiles) {
+    for (let filePath of allRelativeFiles) {
         indexContent += `export * from '${filePath.replace('.ts', '').replace(/\\/g, '/')}';\n`;
     }
     fs.writeFileSync(path.join(targetDir, 'index.ts'), indexContent);
