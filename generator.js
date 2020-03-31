@@ -208,7 +208,8 @@ async function execute(config) {
 
         if ('enum' in type) {
             content += `export enum ${typeName} {\n`;
-            content += `  ${type.enum.map(e => `_${e} = ${e}`).join(',\n  ')}\n`;
+            const names = type['x-enum-varnames'] || type.enum.map(e => `_${e}`);
+            content += `  ${type.enum.map((e, i) => `${names[i]} = ${e}`).join(',\n  ')}\n`;
             content += '}';
         } else {
             //Crio a interface
