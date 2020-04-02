@@ -54,9 +54,17 @@ async function execute(config) {
 
             action.httpMethod = a;
 
+            // Fallback function name
             let functionName = `${a}${changeCase.pascalCase(action.path)}`;
+
+            // Remove this support. "operationId" should be the only valid option for setting function name
             if (action.tags[1]) {
                 functionName = changeCase.camelCase(action.tags[1]);
+            }
+
+            // Function name from operationId
+            if(action.operationId){
+                functionName = changeCase.camelCase(action.operationId);
             }
 
             //Coloco a action dentro do client, como chave seria o nome final da função na classe de client
