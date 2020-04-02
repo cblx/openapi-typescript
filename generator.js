@@ -20,6 +20,8 @@ async function execute(config) {
 
     let clients = {};
 
+    fs.writeFileSync(path.join(targetDir, 'definition.ts'), `export const openApiDefinition = ${JSON.stringify(json, null, 2)};`);
+
     //Entre os paths
     for (let p in json.paths) {
 
