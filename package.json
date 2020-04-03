@@ -31,5 +31,10 @@
   "devDependencies": {
     "typescript": "3.8.3"
   },
-  "types": "./dist/index.d.ts"
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "index.js",
+    "generator.js"
+  ]
 }
