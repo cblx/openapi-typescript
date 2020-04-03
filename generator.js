@@ -83,7 +83,7 @@ async function execute(config) {
 
         let content = '';
 
-        content += `import { OpenApiConnector } from '@cblx-br/openapi-typescript';\n`;
+        content += `import { OpenApiConnector, deleteUndefineds } from '@cblx-br/openapi-typescript';\n`;
 
         if (events.beforeWriteServiceClass) {
             content += events.beforeWriteServiceClass();
@@ -123,9 +123,9 @@ async function execute(config) {
 
                 let queryParameters = parameters.filter(p => p.in == 'query');
                 if (queryParameters.length) {
-                    parametersRef = '{ ';
+                    parametersRef = 'deleteUndefineds({ ';
                     parametersRef += queryParameters.map(p => `${getParamName(p.name)}: parameters.${getParamName(p.name)}`).join(', ');
-                    parametersRef += ' }';
+                    parametersRef += ' })';
                 }
 
                 let pathParameters = parameters.filter(p => p.in == 'path');
