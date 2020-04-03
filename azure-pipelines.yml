@@ -2,6 +2,9 @@ name: $(Build.SourceBranch)$(rev:.r)
 trigger:
   - releases/*
 
+variables:
+  rev: $[counter(variables['Build.SourceBranch'], 0)]
+
 stages:
 # BUILD AND DEPLOY #####################################
 - stage: BuildDeploy
@@ -9,8 +12,6 @@ stages:
   jobs:
   #set build name
   - job: SetBuildName
-    variables:
-        rev: $[counter(variables['Build.SourceBranch'], 0)]
     steps:
       - script: echo "##vso[build.updatebuildnumber]$(Build.SourceBranchName).$(Rev)"
         condition: contains(variables['Build.SourceBranch'], '/releases/')
@@ -18,14 +19,11 @@ stages:
         condition: not(contains(variables['Build.SourceBranch'], '/releases/'))
       - script: npm install
       - script: tsc
-  # deploy
-  - job: Deploy
-    dependsOn: SetBuildName
-    steps:
-    - script: npm version $(Build.BuildNumber) --no-git-tag-version
-    - task: Npm@1
-      inputs:
-        command: 'publish'
-        publishEndpoint: 'npmjs.org em nome de guilherme'
+      # deploy
+      - script: npm version $(Build.BuildNumber) --no-git-tag-version
+      - task: Npm@1
+        inputs:
+          command: 'publish'
+          publishEndpoint: 'npmjs.org em nome de guilherme'
   
   
