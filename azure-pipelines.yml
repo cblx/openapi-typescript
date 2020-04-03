@@ -16,6 +16,8 @@ stages:
         condition: contains(variables['Build.SourceBranch'], '/releases/')
       - script: echo "##vso[build.updatebuildnumber]0.0.0-$(Build.SourceBranchName).$(Rev)"
         condition: not(contains(variables['Build.SourceBranch'], '/releases/'))
+      - script: npm install
+      - script: tsc
   # deploy
   - job: Deploy
     dependsOn: SetBuildName
