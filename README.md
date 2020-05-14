@@ -19,9 +19,23 @@ execute it:
 
 `npx openapi-typescript`
 
+Then create an implementation for your connector using the tool of your choice (fetch, jquery ajax, etc...).
+
+```
+export class MyAppConnector implements OpenApiConnector {
+     async request(method: string, path: string, parameters: any, body: any) {
+         ... implementation ...
+     }
+}
+```
+Use your connector with your client api service.
+```
+var myApi = new MyApiClient(new MyAppConnector());
+let result = await myApi.get();
+```
 -------------
 
-Angular example:
+## Angular example:
 
 create an app-connector.ts
 
@@ -35,10 +49,10 @@ import { OpenApiConnector } from '@cblx-br/openapi-typescript';
 })
 export class AppConnector implements OpenApiConnector {
 
-    constructor(@Inject('BASE_URL') private baseUrl: string, private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
     async request(method: string, path: string, parameters: any, body: any) {
-        return await this.http.request(method, this.baseUrl + path, {
+        return await this.http.request(method, '/' + path, {
             body: body,
             params: parameters
         }).toPromise();
@@ -46,6 +60,27 @@ export class AppConnector implements OpenApiConnector {
 }
 
 ```
+
+app.module.ts
+```
+@NgModule({
+  declarations: [...],
+  imports: [
+    ...
+    HttpClientModule
+  ],
+  providers: [
+    {
+      provide: OpenApiConnector,
+      useClass: AppConnector
+    }
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+```
+
 openapi-typescript.config.js
 
 ```
@@ -59,9 +94,6 @@ var config = {
             content += `import { AppConnector } from 'app/app-connector';\n`;
             content += `@Injectable({ providedIn: 'root' })\n`;
             return content;
-        },
-        createConnectorDecorator: () => {
-            return `@Inject(AppConnector) `;
         }
     }
 };
