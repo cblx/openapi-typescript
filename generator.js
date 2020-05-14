@@ -149,8 +149,10 @@ async function execute(config) {
             }
 
             let signatureParts = [];
-            if (bodySignature) { signatureParts.push(bodySignature); }
+            
             if (parametersSignature) { signatureParts.push(parametersSignature); }
+            if (bodySignature) { signatureParts.push(bodySignature); }
+            
             let signature = signatureParts.join(', ');
 
 
