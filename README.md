@@ -90,8 +90,7 @@ var config = {
      events: {
         beforeWriteServiceClass: () => {
             var content = '';
-            content += `import { Inject, Injectable } from '@angular/core';\n`;
-            content += `import { AppConnector } from 'app/app-connector';\n`;
+            content += `import { Injectable } from '@angular/core';\n`;
             content += `@Injectable({ providedIn: 'root' })\n`;
             return content;
         }
