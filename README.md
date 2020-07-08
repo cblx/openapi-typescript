@@ -91,6 +91,7 @@ var config = {
         interceptServiceClass(serviceClass){
             serviceClass.importsSection.push(`import { Injectable, EventEmitter } from '@angular/core';`);
             serviceClass.decoratorsSection.push(`@Injectable({ providedIn: 'root' })`);
+            // Eventing
             serviceClass.methods.forEach(method => {
                 const eventFieldName = `${method.name}Success`;
                 serviceClass.fieldsSection.push(`${eventFieldName} = new EventEmitter<${method.returnType}>()`);
