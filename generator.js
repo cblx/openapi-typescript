@@ -5,6 +5,71 @@ const changeCase = require('change-case');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
+class ClassDefinition {
+    constructor() {
+        this.name = '';
+        this.constructor = '';
+        this.importsSection = [];
+        this.decoratorsSection = [];
+        this.fieldsSection = [];
+        this.methods = [];
+    }
+
+    toString() {
+        let content = '';
+        let spacing = '    ';
+        this.importsSection.forEach(str => content += `${str}\n`);
+        content += '\n';
+        content += '\n';
+        this.decoratorsSection.forEach(str => content += `${str}\n`);
+        content += '\n';
+
+        // Open class
+        content += `export class ${this.name} {\n`;
+
+        this.fieldsSection.forEach(str => content += `${spacing}${str}\n`);
+        content += '\n';
+        content += `${spacing}${this.constructor}\n\n`
+        
+        this.methods.forEach(method => content += method.toString(spacing) + '\n');
+
+        // Close class
+        content += `}`;
+        return content;
+    }
+};
+
+class MethodDefinition {
+    constructor() {
+        this.async = false;
+        this.name = '';
+        this.parameters = '';
+        this.returnType = '';
+        this.body = '';
+    }
+
+    toString(spacing){
+        let content = '';
+
+        //content += `${spacing}${this.name} = (${this.parameters}) : ${this.returnType} => {\n`;
+        content += spacing;
+        if(this.async){
+            content += 'async ';
+        }
+        let returnType = this.returnType;
+        if(this.async){
+            returnType = `Promise<${returnType}>`;
+        }
+        content += `${this.name}(${this.parameters}) : ${returnType} {\n`;
+        content += spacing;
+        content += spacing;
+        content += this.body.split('\n').join(`\n${spacing}${spacing}`);
+        content += '\n';
+        content += `${spacing}}\n`;
+        return content;
+    }
+}
+
 async function execute(config) {
     let defEndpoint = config.url;
     let targetDir = config.outputDir;
@@ -63,7 +128,7 @@ async function execute(config) {
             }
 
             // Function name from operationId
-            if(action.operationId){
+            if (action.operationId) {
                 functionName = changeCase.camelCase(action.operationId);
             }
 
@@ -74,29 +139,34 @@ async function execute(config) {
 
     const allRelativeFiles = [];
 
+    //const serviceClasses = [];
     //Percorro os clients, criando seus arquivos
     for (let c in clients) {
+        let serviceClass = new ClassDefinition();
         let fileName = `${changeCase.paramCase(c)}.client.ts`;
         let client = clients[c];
 
         let context = new ResolutionContext('client');
 
-        let content = '';
+        //let content = '';
 
-        content += `import { OpenApiConnector, deleteUndefineds } from '@cblx-br/openapi-typescript';\n`;
+        //content += `import { OpenApiConnector, deleteUndefineds } from '@cblx-br/openapi-typescript';\n`;
+        serviceClass.importsSection.push(`import { OpenApiConnector, deleteUndefineds } from '@cblx-br/openapi-typescript';`);
 
-        if (events.beforeWriteServiceClass) {
-            content += events.beforeWriteServiceClass();
-        }
+        // if (events.beforeWriteServiceClass) {
+        //     content += events.beforeWriteServiceClass();
+        // }
 
-        let connectorDecorator = '';
-        if (events.createConnectorDecorator) {
-            connectorDecorator = events.createConnectorDecorator();
-        }
+        // let connectorDecorator = '';
+        // if (events.createConnectorDecorator) {
+        //     connectorDecorator = events.createConnectorDecorator();
+        // }
 
-        content += `export class ${c}Client {\n`;
+        serviceClass.name = `${c}Client`;
+        //content += `export class ${c}Client {\n`;
         //content += `    private api = '${c.toLowerCase()}';\n`;
-        content += `    constructor(${connectorDecorator}private connector: OpenApiConnector) {}\n`;
+        //content += `    constructor(${connectorDecorator}private connector: OpenApiConnector) {}\n`;
+        serviceClass.constructor = `constructor(private connector: OpenApiConnector) {}`;
         for (let a in client.actions) {
             let action = client.actions[a];
             let path = action.path;
@@ -129,17 +199,17 @@ async function execute(config) {
                 }
 
                 let pathParameters = parameters.filter(p => p.in == 'path');
-                for(let p of pathParameters){
+                for (let p of pathParameters) {
                     path = path.replace(`{${p.name}}`, `$\{parameters.${p.name}\}`);
                 }
             }
 
             if ('requestBody' in action) {
-                let content = action.requestBody.content['application/json'];
-                if (!content) { continue; }
+                let requestBodyContent = action.requestBody.content['application/json'];
+                if (!requestBodyContent) { continue; }
 
                 bodyRef = 'body';
-                let modelType = context.resolve(action.requestBody.content['application/json'].schema);
+                let modelType = context.resolve(requestBodyContent.schema);
                 bodySignature += `body: ${modelType}`;
             }
 
@@ -149,52 +219,51 @@ async function execute(config) {
             }
 
             let signatureParts = [];
-            
+
             if (parametersSignature) { signatureParts.push(parametersSignature); }
             if (bodySignature) { signatureParts.push(bodySignature); }
-            
+
             let signature = signatureParts.join(', ');
 
+            const method = new MethodDefinition();
+            method.async = true;
+            method.name = a;
+            //method.returnType = `Promise<${returnType}>`;
+            method.returnType = returnType;
+            method.parameters = signature;
+            //method.signature = `${a} = (${signature}) : Promise<${returnType}>`;
+            method.body += `return this.connector.request(\n`;
+            method.body += `    '${action.httpMethod}',\n`;
+            method.body += `    \`${path}\`,\n`;
+            method.body += `    ${parametersRef},\n`;
+            method.body += `    ${bodyRef}\n`;
+            method.body += `);\n`;
+            serviceClass.methods.push(method);
 
-            content += `    ${a} = (${signature}) : Promise<${returnType}> => {\n`;
+            // content += `    ${a} = (${signature}) : Promise<${returnType}> => {\n`;
 
 
-            content += `        return this.connector.request(\n`;
-            content += `            '${action.httpMethod}',\n`;
-            content += `            \`${path}\`,\n`;
-            content += `            ${parametersRef},\n`;
-            content += `            ${bodyRef}\n`;
-            content += `        );\n`;
-
-            // content += `        return this.invoker.invoke(\n`;
-            // //Esse primeiros parametros eram usados pelo webtyped para tipar o subscription de eventos. Vamos simplificar mandando qlquer coisa
-            // content += `            {\n`;
-            // content += `                returnTypeName: 'notNecessary',\n`;
-            // content += `                kind: 'notNecessary',\n`;
-            // content += `                func: <any>this.${a},\n`;
-            // content += `                parameters: {},\n`;
-            // content += `            },\n`;
-            // //Caminho base da api (não precisa, vai estar tudo no path da action)
-            // content += `            '',\n`;
-            // //Caminho relativo da ação
-            // content += `            '${action.path}',\n`;
-            // //Metodo http utilizado
+            // content += `        return this.connector.request(\n`;
             // content += `            '${action.httpMethod}',\n`;
-            // //Body
-            // content += `            ${bodyRef},\n`;
-            // //Query parameters
+            // content += `            \`${path}\`,\n`;
             // content += `            ${parametersRef},\n`;
-            // //Retorno esperado, neste projeto usamos direto Promise,  no lugar de Observables
-            // content += `            { name: 'Promise' }\n`;
+            // content += `            ${bodyRef}\n`;
             // content += `        );\n`;
 
-            content += `    }\n`;
+            // content += `    }\n`;
         }
-        content += `}\n`;
+        //content += `}\n`;
 
         for (let i in context.imports) {
-            content = i + content;
+            //content = i + content;
+            serviceClass.importsSection.push(i);
         }
+
+        if (events.interceptServiceClass) {
+            events.interceptServiceClass(serviceClass);
+        }
+
+        const content = serviceClass.toString();
 
         let filePath = path.join(targetDir, fileName);
         fs.writeFileSync(filePath, content);

@@ -88,11 +88,19 @@ var config = {
     url: "<url>/swagger.json",
     outputDir: "./src/client",
      events: {
-        beforeWriteServiceClass: () => {
-            var content = '';
-            content += `import { Injectable } from '@angular/core';\n`;
-            content += `@Injectable({ providedIn: 'root' })\n`;
-            return content;
+        interceptServiceClass(serviceClass){
+            serviceClass.importsSection.push(`import { Injectable, EventEmitter } from '@angular/core';`);
+            serviceClass.decoratorsSection.push(`@Injectable({ providedIn: 'root' })`);
+            serviceClass.methods.forEach(method => {
+                const eventFieldName = `${method.name}Success`;
+                serviceClass.fieldsSection.push(`${eventFieldName} = new EventEmitter<${method.returnType}>()`);
+                method.body = method.body.replace('return ', 'const promise = ');
+                method.body += '\n';
+                method.body += 'const result = await promise;\n\n';
+                method.body += '// Emit success\n';
+                method.body += `this.${eventFieldName}.emit(result);\n\n`;
+                method.body += 'return result;'
+            });
         }
     }
 };
