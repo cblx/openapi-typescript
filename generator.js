@@ -188,7 +188,8 @@ async function execute(config) {
                 parametersSignature += 'parameters: { ';
                 let parameters = [];
                 parameters = action.parameters;
-                parametersSignature += parameters.map(p => getParamName(p.name) + '?: ' + context.resolve(p.schema)).join(', ');
+                //parametersSignature += parameters.map(p => getParamName(p.name) + '?: ' + context.resolve(p.schema)).join(', ');
+                parametersSignature += parameters.map(p => getParamName(p.name) + (p.required ? '': '?') + ': ' + context.resolve(p.schema)).join(', ');
                 parametersSignature += ' }';
 
                 let queryParameters = parameters.filter(p => p.in == 'query');
