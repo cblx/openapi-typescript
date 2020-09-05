@@ -30,7 +30,7 @@ class ClassDefinition {
         this.fieldsSection.forEach(str => content += `${spacing}${str}\n`);
         content += '\n';
         content += `${spacing}${this.constructor}\n\n`
-        
+
         this.methods.forEach(method => content += method.toString(spacing) + '\n');
 
         // Close class
@@ -48,16 +48,16 @@ class MethodDefinition {
         this.body = '';
     }
 
-    toString(spacing){
+    toString(spacing) {
         let content = '';
 
         //content += `${spacing}${this.name} = (${this.parameters}) : ${this.returnType} => {\n`;
         content += spacing;
-        if(this.async){
+        if (this.async) {
             content += 'async ';
         }
         let returnType = this.returnType;
-        if(this.async){
+        if (this.async) {
             returnType = `Promise<${returnType}>`;
         }
         content += `${this.name}(${this.parameters}) : ${returnType} {\n`;
@@ -148,24 +148,11 @@ async function execute(config) {
 
         let context = new ResolutionContext('client');
 
-        //let content = '';
-
-        //content += `import { OpenApiConnector, deleteUndefineds } from '@cblx-br/openapi-typescript';\n`;
-        serviceClass.importsSection.push(`import { OpenApiConnector, deleteUndefineds } from '@cblx-br/openapi-typescript';`);
-
-        // if (events.beforeWriteServiceClass) {
-        //     content += events.beforeWriteServiceClass();
-        // }
-
-        // let connectorDecorator = '';
-        // if (events.createConnectorDecorator) {
-        //     connectorDecorator = events.createConnectorDecorator();
-        // }
+        //serviceClass.importsSection.push(`import { OpenApiConnector, deleteUndefineds } from '@cblx-br/openapi-typescript';`);
+        let importedLibComponents = [];
+        importedLibComponents.push('OpenApiConnector');
 
         serviceClass.name = `${c}Client`;
-        //content += `export class ${c}Client {\n`;
-        //content += `    private api = '${c.toLowerCase()}';\n`;
-        //content += `    constructor(${connectorDecorator}private connector: OpenApiConnector) {}\n`;
         serviceClass.constructor = `constructor(private connector: OpenApiConnector) {}`;
         for (let a in client.actions) {
             let action = client.actions[a];
@@ -189,7 +176,7 @@ async function execute(config) {
                 let parameters = [];
                 parameters = action.parameters;
                 //parametersSignature += parameters.map(p => getParamName(p.name) + '?: ' + context.resolve(p.schema)).join(', ');
-                parametersSignature += parameters.map(p => getParamName(p.name) + (p.required ? '': '?') + ': ' + context.resolve(p.schema)).join(', ');
+                parametersSignature += parameters.map(p => getParamName(p.name) + (p.required ? '' : '?') + ': ' + context.resolve(p.schema)).join(', ');
                 parametersSignature += ' }';
 
                 let queryParameters = parameters.filter(p => p.in == 'query');
@@ -197,6 +184,10 @@ async function execute(config) {
                     parametersRef = 'deleteUndefineds({ ';
                     parametersRef += queryParameters.map(p => `${getParamName(p.name)}: parameters.${getParamName(p.name)}`).join(', ');
                     parametersRef += ' })';
+
+                    if (importedLibComponents.indexOf('deleteUndefineds') < 0) {
+                        importedLibComponents.push('OpenApiConnector');
+                    }
                 }
 
                 let pathParameters = parameters.filter(p => p.in == 'path');
@@ -254,6 +245,8 @@ async function execute(config) {
             // content += `    }\n`;
         }
         //content += `}\n`;
+
+        serviceClass.importsSection.push(`import { ${importedLibComponents.join(', ')} } from '@cblx-br/openapi-typescript';`);
 
         for (let i in context.imports) {
             //content = i + content;
