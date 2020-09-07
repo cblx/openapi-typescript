@@ -186,7 +186,7 @@ async function execute(config) {
                     parametersRef += ' })';
 
                     if (importedLibComponents.indexOf('deleteUndefineds') < 0) {
-                        importedLibComponents.push('OpenApiConnector');
+                        importedLibComponents.push('deleteUndefineds');
                     }
                 }
 
