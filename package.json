@@ -26,7 +26,7 @@
   "dependencies": {
     "change-case": "4.1.1",
     "commander": "4.0.1",
-    "node-fetch": "2.6.0"
+    "node-fetch": "2.6.1"
   },
   "devDependencies": {
     "typescript": "3.8.3"
