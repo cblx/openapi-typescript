@@ -32,7 +32,7 @@ jobs:
       - run: npm version ${{steps.get-version.outputs.id}} --no-git-tag-version
       - uses: actions/upload-artifact@v2.1.4
         with:
-          path: ./
+          path: './'
 
   publish-npm:
     needs: build
