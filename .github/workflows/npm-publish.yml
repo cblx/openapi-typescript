@@ -82,4 +82,4 @@ jobs:
       - run: npm publish cblx-br-openapi-typescript-${{steps.get-version.outputs.id}}.tgz
         working-directory: artifact/artifact
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.GH_TOKEN}}
