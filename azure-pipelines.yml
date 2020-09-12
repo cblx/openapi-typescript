@@ -1,6 +1,7 @@
 name: $(Build.SourceBranch)$(rev:.r)
-trigger:
-  - releases/*
+# trigger:
+#   - releases/*
+trigger: none
 
 variables:
   rev: $[counter(variables['Build.SourceBranch'], 0)]
