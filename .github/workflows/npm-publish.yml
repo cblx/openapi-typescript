@@ -55,7 +55,7 @@ jobs:
             const id = branch.split('/').reverse()[0];
             core.setOutput('id', id);
       - run: npm publish cblx-br-openapi-typescript-${{steps.get-version.outputs.id}}.tgz
-        working-directory: artifact
+        working-directory: artifact/artifact
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
@@ -80,6 +80,6 @@ jobs:
             const id = branch.split('/').reverse()[0];
             core.setOutput('id', id);
       - run: npm publish cblx-br-openapi-typescript-${{steps.get-version.outputs.id}}.tgz
-        working-directory: artifact
+        working-directory: artifact/artifact
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
