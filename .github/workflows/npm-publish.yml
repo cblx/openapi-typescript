@@ -30,17 +30,18 @@ jobs:
             const id = branch.split('/').reverse()[0];
             core.setOutput('id', id);
       - run: npm version ${{steps.get-version.outputs.id}} --no-git-tag-version
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.1.4
 
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2.0.5
       - uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
@@ -49,12 +50,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2.0.5
       - uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
-      - run: npm ci
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
