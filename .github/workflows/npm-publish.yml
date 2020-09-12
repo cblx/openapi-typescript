@@ -30,8 +30,9 @@ jobs:
             const id = branch.split('/').reverse()[0];
             core.setOutput('id', id);
       - run: npm version ${{steps.get-version.outputs.id}} --no-git-tag-version
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.1.4
+      - uses: actions/upload-artifact@v2.1.4
+        with:
+          path: ./
 
   publish-npm:
     needs: build
