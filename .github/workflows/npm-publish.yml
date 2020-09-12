@@ -31,7 +31,6 @@ jobs:
             core.setOutput('id', id);
       - run: npm version ${{steps.get-version.outputs.id}} --no-git-tag-version
       - run: npm pack
-        
       - uses: actions/upload-artifact@v2.1.4
         with:
           path: './*.tgz'
