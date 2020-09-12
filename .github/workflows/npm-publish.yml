@@ -21,7 +21,7 @@ jobs:
           node-version: 12
       - run: npm ci
       - run: tsc
-      - id: get-id
+      - id: get-version
         uses: actions/github-script@0.9.0
         with:
           script: |
