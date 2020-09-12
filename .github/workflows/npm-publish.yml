@@ -59,27 +59,29 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
-
-  publish-gpr:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v2.0.5
-        with:
-          path: artifact
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-          registry-url: https://npm.pkg.github.com/
-      - id: get-version
-        uses: actions/github-script@0.9.0
-        with:
-          script: |
-            const branch = '${{github.ref}}';
-            console.log(branch);
-            const id = branch.split('/').reverse()[0];
-            core.setOutput('id', id);
-      - run: npm publish cblx-br-openapi-typescript-${{steps.get-version.outputs.id}}.tgz
-        working-directory: artifact/artifact
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GH_TOKEN}}
+# This is trying to publish to npm registry instead of github registry
+# Try to fix it in the future
+# https://github.community/t/why-cant-i-publish-npm-package-to-github-packages-registry/17602
+  # publish-gpr:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/download-artifact@v2.0.5
+  #       with:
+  #         path: artifact
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12
+  #         registry-url: https://npm.pkg.github.com/
+  #     - id: get-version
+  #       uses: actions/github-script@0.9.0
+  #       with:
+  #         script: |
+  #           const branch = '${{github.ref}}';
+  #           console.log(branch);
+  #           const id = branch.split('/').reverse()[0];
+  #           core.setOutput('id', id);
+  #     - run: npm publish cblx-br-openapi-typescript-${{steps.get-version.outputs.id}}.tgz
+  #       working-directory: artifact/artifact
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{secrets.GH_TOKEN}}
