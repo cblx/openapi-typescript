@@ -2,7 +2,7 @@
     "compileOnSave": false,
     "compilerOptions": {
         "baseUrl": "./",
-        "outDir": "./dist",
+        "outDir": "../dist",
         "declaration": true,
         "downlevelIteration": true,
         "experimentalDecorators": true,

@@ -1,11 +1,10 @@
 #!/usr/bin/env node
-const { exec } = require('child_process');
-const program = require('commander');
-const fs = require('fs');
-const path = require('path');
-const executeGenerator = require('./generator');
+import * as program from 'commander';
+import * as fs from 'fs';
+import * as path from 'path';
+import { generateFromEndpoint } from './generator';
 
-const pkg = require('./package.json');
+const pkg = require('../package.json');
 program.version(pkg.version);
 
 program
@@ -19,9 +18,9 @@ program
             return;
         }
 
-        const config = require(path.resolve(cmd.configuration)); //JSON.parse(fs.readFileSync(cmd.configuration, 'utf8'));
+        const config = require(path.resolve(cmd.configuration));
 
-        executeGenerator(/*config.url, config.outputDir*/config);
+        generateFromEndpoint(config);
     });
 
 const parsed = program.parse(process.argv);
