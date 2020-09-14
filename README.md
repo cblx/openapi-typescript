@@ -35,7 +35,43 @@ let result = await myApi.get();
 ```
 -------------
 
-## Angular example:
+## Fetch connector example: 
+
+```
+import { OpenApiConnector } from "@cblx-br/openapi-typescript";
+
+class MyConnector extends OpenApiConnector {
+    async request(method: string, path: string, parameters: any, body: any) {
+        var url = new URL(location.origin + '/' + path);
+        if (parameters) {
+            Object.keys(parameters).forEach(key => {
+                let value = parameters[key];
+                if (value === null || value === undefined) { value = ''; }
+                url.searchParams.append(key, value);
+            });
+        }
+
+        let response = await fetch(url.toString(), {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: method,
+            body: body ? JSON.stringify(body) : undefined
+        });
+
+        if (response.status != 200) {
+            throw await response.json();
+        }
+
+        return await response.json();
+    }
+}
+
+export const connector = new MyConnector();
+```
+
+## Angular connector example:
 
 create an app-connector.ts
 
@@ -88,20 +124,9 @@ var config = {
     url: "<url>/swagger.json",
     outputDir: "./src/client",
      events: {
-        interceptServiceClass(serviceClass){
-            serviceClass.importsSection.push(`import { Injectable, EventEmitter } from '@angular/core';`);
-            serviceClass.decoratorsSection.push(`@Injectable({ providedIn: 'root' })`);
-            // Modify mehtod bodies for eventing
-            serviceClass.methods.forEach(method => {
-                const eventFieldName = `${method.name}Success`;
-                serviceClass.fieldsSection.push(`${eventFieldName} = new EventEmitter<${method.returnType}>()`);
-                method.body = method.body.replace('return ', 'const promise = ');
-                method.body += '\n';
-                method.body += 'const result = await promise;\n\n';
-                method.body += '// Emit success\n';
-                method.body += `this.${eventFieldName}.emit(result);\n\n`;
-                method.body += 'return result;'
-            });
+          writingClient(client, context) {
+            client.importsSection.push(`import { Injectable } from '@angular/core';`);
+            client.decoratorsSection.push(`@Injectable({ providedIn: 'root' })`);
         }
     }
 };
