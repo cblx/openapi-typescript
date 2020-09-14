@@ -108,7 +108,7 @@ app.module.ts
   providers: [
     {
       provide: OpenApiConnector,
-      useClass: AppConnector
+      useClass: MyAppConnector
     }
   ],
   bootstrap: [AppComponent]
