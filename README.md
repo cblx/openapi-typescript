@@ -134,7 +134,7 @@ var config = {
 module.exports = config;
 ```
 
-Then inject your client api sercice wherever you need...
+Then inject your client api services wherever you need...
 
 ```
 @Component(...)
