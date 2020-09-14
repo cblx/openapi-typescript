@@ -8,6 +8,7 @@ import { SolutionContext } from './main-context';
 import { organizeActionsInClients } from './organize';
 import * as path from 'path';
 import * as fs from 'fs';
+import fetch from 'node-fetch';
 
 export async function generateFromEndpoint(config: OpenApiTypeScriptConfig){
     //Fetch the definition
