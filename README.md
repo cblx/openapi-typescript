@@ -133,3 +133,14 @@ var config = {
 
 module.exports = config;
 ```
+
+Then inject your client api sercice wherever you need...
+
+```
+@Component(...)
+export class MyComponent{
+    constructor(myApiClient: MyApiClient){
+        ...
+    }
+}
+```
