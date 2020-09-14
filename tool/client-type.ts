@@ -33,7 +33,8 @@ export class ClientType extends TypeBase {
 
     write() {
         let context = this.baseContext.createTypeContext(this);
-        this.config?.events?.writingClient(this, context);
+        const writingClient = this.config?.events?.writingClient;
+        writingClient && writingClient(this, context);
 
         let content = '';
         let needToImportDeleteUndefineds = this.methods.some(m => m.hasQueryParameters);

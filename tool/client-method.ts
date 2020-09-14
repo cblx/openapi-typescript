@@ -110,7 +110,8 @@ export class ClientMethod {
         bodyLines.push('const result = await promise;');
         bodyLines.push('return result;');
 
-        config?.events?.writingClientMethod(this, bodyLines, context);
+        const writingClientMethod = config?.events?.writingClientMethod;
+        writingClientMethod && writingClientMethod(this,bodyLines,context);
 
         let content = '';
         let parameters = this.writeParameters(context);
