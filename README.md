@@ -40,7 +40,7 @@ let result = await myApi.get();
 ```
 import { OpenApiConnector } from "@cblx-br/openapi-typescript";
 
-class MyConnector extends OpenApiConnector {
+class MyAppConnector extends OpenApiConnector {
     async request(method: string, path: string, parameters: any, body: any) {
         var url = new URL(location.origin + '/' + path);
         if (parameters) {
@@ -83,7 +83,7 @@ import { OpenApiConnector } from '@cblx-br/openapi-typescript';
 @Injectable({
     providedIn: 'root'
 })
-export class AppConnector implements OpenApiConnector {
+export class MyAppConnector implements OpenApiConnector {
 
     constructor(private http: HttpClient) {}
 
