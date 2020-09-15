@@ -33,7 +33,7 @@ export class ClientType extends TypeBase {
 
     write() {
         let context = this.baseContext.createTypeContext(this);
-        const writingClient = this.config?.events?.writingClient;
+        const writingClient = this.config?.hooks?.writingClient;
         writingClient && writingClient(this, context);
 
         let content = '';
