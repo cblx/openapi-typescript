@@ -4,7 +4,7 @@ const json: any = {};
 
 generate(json, {
     outputDir: './test',
-    events: {
+    hooks: {
         writingClientMethod: (method, bodyLines, context) => {
             const eventFieldName = `${method.name}Success`;
             bodyLines.splice(bodyLines.length- 1, 0, '\n\n// Emit event');

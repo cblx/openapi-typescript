@@ -123,7 +123,7 @@ openapi-typescript.config.js
 var config = {
     url: "<url>/swagger.json",
     outputDir: "./src/client",
-     events: {
+    hooks: {
           writingClient(client, context) {
             client.importsSection.push(`import { Injectable } from '@angular/core';`);
             client.decoratorsSection.push(`@Injectable({ providedIn: 'root' })`);

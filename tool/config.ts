@@ -5,7 +5,7 @@ import { TypeContext } from './type-context';
 export interface OpenApiTypeScriptConfig {
     url?: string;
     outputDir?: string;
-    events?: {
+    hooks?: {
         writingClient?: (client: ClientType, context: TypeContext) => any,
         writingClientMethod?: (method: ClientMethod, bodyLines: string[], context: TypeContext) => any
     }
