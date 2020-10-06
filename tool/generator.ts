@@ -25,7 +25,9 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
     deleteFolderRecursive(config.outputDir);
 
     // Write the definition used in a const, so the client can use it's data easily
-    fs.writeFileSync(path.join(config.outputDir, 'definition.ts'), `export const openApiDefinition = ${JSON.stringify(json, null, 2)};`);
+    const definitionPath = path.join(config.outputDir, 'definition.ts');
+    ensureDirectoryExistence(definitionPath);
+    fs.writeFileSync(definitionPath, `export const openApiDefinition = ${JSON.stringify(json, null, 2)};`);
   
     const mainContext = new SolutionContext();
     
