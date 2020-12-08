@@ -10,13 +10,12 @@ export class ModelType extends TypeBase {
         let context = this.baseContext.createTypeContext(this);
         let content = '';
         let schema = this.schema;
-        //definition = new InterfaceDefinition();
-        //Crio a interface
         content += `export interface ${this.name} {\n`;
         for (let p in schema.properties) {
-            let prop = schema.properties[p];
+            let prop = schema.properties[p] as SchemaObject;
             let propTypeName = context.writeName(prop);
-            content += `    '${p}'${schema.nullable ? '?' : ''}: ${propTypeName};\n`;
+            //content += `    '${p}'${schema.nullable ? '?' : ''}: ${propTypeName};\n`;
+            content += `    '${p}': ${propTypeName} ${prop.nullable ? '| null' : ''};\n`;
         }
         content += '}\n\n';
 
