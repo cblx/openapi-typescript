@@ -17,8 +17,8 @@ export class EnumType extends TypeBase {
     }
 
     private writeEnumNameFromValue(value: any) {
-        if(this.isNumeric(name)){ return `_${name}`; }
-        return name;
+        if(this.isNumeric(value)){ return `_${value}`; }
+        return value;
     }
 
     private isNumeric(str: any) {
