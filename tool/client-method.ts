@@ -41,7 +41,7 @@ export class ClientMethod {
 
             let pathParameters = <ParameterObject[]>parameters.filter((p: ParameterObject) => p.in == 'path');
             for (let p of pathParameters) {
-                this.path = this.path.replace(`{${p.name}}`, `$\{parameters.${p.name}\}`);
+                this.path = this.path.replace(`{${p.name}}`, `$\{parameters.${this.getParamName(p.name)}\}`);
             }
         }
         this.preBodyLines.push(searchPart);
