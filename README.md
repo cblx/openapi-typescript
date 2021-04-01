@@ -64,7 +64,10 @@ class MyAppConnector extends OpenApiConnector {
             throw await response.json();
         }
 
-        return await response.json();
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.indexOf('application/json') == 0) {
+            return await response.json();
+        }
     }
 }
 
