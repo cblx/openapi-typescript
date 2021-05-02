@@ -1,33 +1,25 @@
 import { OpenAPIObject, SchemaObject } from 'openapi3-ts';
 import { ClientType } from './client-type';
 import { OpenApiTypeScriptConfig } from './config';
-import { deleteFolderRecursive } from './delete-folder-recursive';
 import { EnumType } from './enum-type';
 import { ModelType } from './model-type';
 import { SolutionContext } from './main-context';
 import { organizeActionsInClients } from './organize';
 import * as path from 'path';
-import * as fs from 'fs';
 import fetch from 'node-fetch';
+import { FileManager } from './file-manager';
+import * as colors from 'colors';
 
 export async function generateFromEndpoint(config: OpenApiTypeScriptConfig){
-    //Fetch the definition
     let defEndpoint = config.url;
-    //let targetDir = config.outputDir;
-    //let events = config.events || {};
-
     let response = await fetch(defEndpoint);
     let json: OpenAPIObject = await response.json();
     generate(json, config);
 }
 
 export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptConfig) {
-    deleteFolderRecursive(config.outputDir);
-
-    // Write the definition used in a const, so the client can use it's data easily
-    const definitionPath = path.join(config.outputDir, 'definition.ts');
-    ensureDirectoryExistence(definitionPath);
-    fs.writeFileSync(definitionPath, `export const openApiDefinition = ${JSON.stringify(json, null, 2)};`);
+    const fileManager = new FileManager(config.outputDir);
+    fileManager.write('definition.ts', `export const openApiDefinition = ${JSON.stringify(json, null, 2)};`);
   
     const mainContext = new SolutionContext();
     
@@ -38,7 +30,6 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
     }
 
     for(let id in json.components.schemas){
-        //let typeName = componentName.replace('[]', 'Array');
         let schema: SchemaObject = json.components.schemas[id];
         if ('enum' in schema) {
             mainContext.modelsAndEnums[id] = new EnumType(id, schema);
@@ -53,23 +44,16 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
         const dir = path.dirname(filePath);
         indexes[dir] = indexes[dir] || '';
         indexes[dir] += `export * from './${path.basename(filePath).replace('.ts', '')}';\n`;
-
-        const finalPath = path.join(config.outputDir, filePath);
-        ensureDirectoryExistence(finalPath);
-        fs.writeFileSync(finalPath, result[filePath]);
+        fileManager.write(filePath, result[filePath]);
     }
 
-    for(let index in indexes){
-      const finalPath = path.join(config.outputDir, index, 'index.ts');
-      fs.writeFileSync(finalPath, indexes[index]);
+    for(let indexDir in indexes){
+      const finalPath = path.join(indexDir, 'index.ts');
+      fileManager.write(finalPath, indexes[indexDir]);
     }
-}
 
-function ensureDirectoryExistence(filePath) {
-  var dirname = path.dirname(filePath);
-  if (fs.existsSync(dirname)) {
-    return true;
-  }
-  ensureDirectoryExistence(dirname);
-  fs.mkdirSync(dirname);
+    fileManager.deleteOldFiles();
+    fileManager.saveState();
+    console.log();
+    console.log(colors.gray('GENERATION COMPLETED!'));
 }
