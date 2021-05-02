@@ -7,7 +7,6 @@
         "experimentalDecorators": true,
         "module": "CommonJs",
         "moduleResolution": "node",
-        "importHelpers": true,
         "target": "es5",
         "typeRoots": [
             "node_modules/@types"
@@ -16,9 +15,5 @@
             "es2018",
             "dom"
         ]
-    },
-    "angularCompilerOptions": {
-        "fullTemplateTypeCheck": true,
-        "strictInjectionParameters": true
     }
 }
