@@ -33,7 +33,7 @@ Use your connector with your client api service.
 var myApi = new MyApiClient(new MyAppConnector());
 let result = await myApi.get();
 ```
-Examples: [Fetch](#fetch-connector-example), [Angular](angular-connector-example)
+Examples: [Fetch](#fetch-connector-example), [Angular](#angular-connector-example)
 
 
 -------------
