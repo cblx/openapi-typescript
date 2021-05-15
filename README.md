@@ -42,6 +42,12 @@ For friendly function names, set the desired name in the operantionId field of y
 
 -------------
 
+## Enum names
+
+This tool supports the 'x-enum-varnames' extension
+
+-------------
+
 ## Fetch connector example
 
 ```
