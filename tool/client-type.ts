@@ -4,16 +4,17 @@ import * as changeCase from 'change-case'
 import { BaseContext } from './base-context';
 import { ClientMethod } from './client-method';
 import { OpenApiTypeScriptConfig } from './config';
+import { ClientMethodOld } from './client-method-old';
 
 export class ClientType extends TypeBase {
     ctor = 'constructor(private connector: OpenApiConnector) {}';
     importsSection = [];
     decoratorsSection = [];
     fieldsSection = [];
-    methods: ClientMethod[] = [];
+    methods: (ClientMethod | ClientMethodOld)[] = [];
 
     constructor(
-        id: string, 
+        private id: string, 
         private pathItems: { [name: string]: PathItemObject }, 
         private baseContext: BaseContext,
         private config: OpenApiTypeScriptConfig
@@ -25,10 +26,21 @@ export class ClientType extends TypeBase {
     }
 
     private init(){
+        const Method = this.resolveClientMethodType();
         for (let a in this.pathItems) {
-            const method = new ClientMethod(a, this.pathItems[a]);
+            const method = new Method(a, this.pathItems[a]);
             this.methods.push(method);
         }
+    }
+
+    private resolveClientMethodType(){
+        if(!this.config.clients) { return ClientMethod; }
+        const specificConfig = this.config.clients[this.id];
+        if(specificConfig?.oldMode === true){ return ClientMethodOld; }
+        if(specificConfig?.oldMode === false){ return ClientMethod; }
+        const defaultConfig = this.config.clients.default;
+        if(defaultConfig?.oldMode === true){ return ClientMethodOld; }
+        return ClientMethod;
     }
 
     write() {
