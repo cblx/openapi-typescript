@@ -33,9 +33,16 @@ Use your connector with your client api service.
 var myApi = new MyApiClient(new MyAppConnector());
 let result = await myApi.get();
 ```
+Examples: [Fetch](#fetch-connector-example), [Angular](#angular-connector-example)
+
+-------------
+## Friendly function names
+
+For friendly function names, set the desired name in the operantionId field of your schema.
+
 -------------
 
-## Fetch connector example: 
+## Fetch connector example
 
 ```
 import { OpenApiConnector } from "@cblx-br/openapi-typescript";
@@ -74,7 +81,7 @@ class MyAppConnector extends OpenApiConnector {
 export const connector = new MyConnector();
 ```
 
-## Angular connector example:
+## Angular connector example
 
 create an app-connector.ts
 
