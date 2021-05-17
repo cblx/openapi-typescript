@@ -4,6 +4,8 @@
 
 openapi client generator for typescript
 
+## Install
+
 `npm install @cblx-br/openapi-typescript --save-dev`
 
 
@@ -38,18 +40,18 @@ let result = await myApi.get();
 ```
 Examples: [Fetch](#fetch-connector-example), [Angular](#angular-connector-example)
 
--------------
+
 ## Friendly function names
 
 For friendly function names, set the desired name in the operantionId field of your schema.
 
--------------
+
 
 ## Enum names
 
 This tool supports the 'x-enum-varnames' extension
 
--------------
+
 
 ## Fetch connector example
 
