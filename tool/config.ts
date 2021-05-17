@@ -12,7 +12,7 @@ export interface OpenApiTypeScriptConfig {
          */
         writingClient?: (client: ClientType, context: TypeContext) => any,
         /**
-         * Allow to intercept and change write partes of API client functions
+         * Allow to intercept and change write parts of API client functions
          */
         writingClientMethod?: (method: ClientMethod | ClientMethodOld, bodyLines: string[], context: TypeContext) => any
     },
@@ -34,6 +34,7 @@ export interface OpenApiTypeScriptConfig {
             /**
              * Extends the type including metadata static fields
              * with the type and it's fields names
+             * (use 'default' to apply option to all models)
              */
             generateMetadata?: boolean
         }
