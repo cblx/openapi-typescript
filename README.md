@@ -4,6 +4,13 @@
 
 openapi client generator for typescript
 
+
+  * [Install](#install)
+  * [Friendly function names](#friendly-function-names)
+  * [Enum names](#enum-names)
+  * [Fetch connector example](#fetch-connector-example)
+  * [Angular connector example](#angular-connector-example)
+
 ## Install
 
 `npm install @cblx-br/openapi-typescript --save-dev`
