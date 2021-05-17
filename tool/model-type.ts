@@ -1,9 +1,14 @@
 import { SchemaObject } from 'openapi3-ts';
 import { TypeBase } from './type-base';
 import { BaseContext } from './base-context';
+import { OpenApiTypeScriptConfig } from './config';
 
 export class ModelType extends TypeBase {
-    constructor(public readonly id: string, public readonly schema: SchemaObject, private baseContext: BaseContext){
+    constructor(
+        public readonly id: string,
+        public readonly schema: SchemaObject,
+        private baseContext: BaseContext,
+        private config: OpenApiTypeScriptConfig) {
         super(id);
     }
     write() {
@@ -14,12 +19,25 @@ export class ModelType extends TypeBase {
         for (let p in schema.properties) {
             let prop = schema.properties[p] as SchemaObject;
             let propTypeName = context.writeName(prop);
-            //content += `    '${p}'${schema.nullable ? '?' : ''}: ${propTypeName};\n`;
             content += `    '${p}': ${propTypeName} ${prop.nullable ? '| null' : ''};\n`;
         }
         content += '}\n\n';
 
-        content += `const schema = ${JSON.stringify(schema, null, 4)};\n\n`
+        const defaultConfig = this.config.models?.default || {};
+        const modelConfig = this.config?.models ? this.config.models[this.id] || {} : {};
+        const mixedConfig = { ...defaultConfig, ...modelConfig };
+        if (mixedConfig.generateMetadata === true) {
+            content += this.writeMetadata();
+        }
+
+        content = context.writeImports() + content;
+
+        return content;
+    }
+
+    private writeMetadata() {
+        const schema = this.schema;
+        let content = `const schema = ${JSON.stringify(schema, null, 4)};\n\n`;
 
         //Crio um tipo fisico para referenciarmos names
         content += `export class ${this.name} {\n`;
@@ -34,9 +52,6 @@ export class ModelType extends TypeBase {
         }
         content += `    static schema = schema;\n`;
         content += `}`;
-
-        content = context.writeImports() + content;
-
         return content;
     }
 }
