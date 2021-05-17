@@ -1,6 +1,6 @@
 # openapi-typescript
 
-[![npm](https://img.shields.io/npm/v/@cblx-br/openapi-typescript
+![npm](https://img.shields.io/npm/v/@cblx-br/openapi-typescript?logo=npm)
 
 openapi client generator for typescript
 
