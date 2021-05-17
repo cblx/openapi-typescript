@@ -1,4 +1,7 @@
 # openapi-typescript
+
+[![npm](https://img.shields.io/npm/v/@cblx-br/openapi-typescript
+
 openapi client generator for typescript
 
 `npm install @cblx-br/openapi-typescript --save-dev`
