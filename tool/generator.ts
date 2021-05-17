@@ -30,7 +30,7 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
         fileManager.write('definition.ts', `export const openApiDefinition = ${JSON.stringify(json, null, 2)};`);
     }
     if(config.generateComponents?.schemasConst){
-        fileManager.write('definition.ts', `export const schemas = ${JSON.stringify(json.components.schemas, null, 2)};`);
+        fileManager.write('schemas.ts', `export const schemas = ${JSON.stringify(json.components.schemas, null, 2)};`);
     }
 
     const mainContext = new SolutionContext();
