@@ -10,6 +10,7 @@ openapi client generator for typescript
   * [Enum names](#enum-names)
   * [Fetch connector example](#fetch-connector-example)
   * [Angular connector example](#angular-connector-example)
+  * [Advanced options](#advanced-options)
 
 ## Install
 
@@ -172,3 +173,25 @@ export class MyComponent{
     }
 }
 ```
+
+## Advanced options
+
+The `openapi-typescript.config.js` supports some extra options. Those options can be found here:
+
+https://github.com/cblx/openapi-typescript/blob/main/tool/config.ts
+
+Sometimes I use these options:
+
+```
+
+   models: {
+      default: {
+          generateMetadata: true // So I can reference types and field names
+      }
+   },
+   generateComponents: {
+      schemasConst: true // So I can use model schemas to build forms/validation dynamically in Angular or in some other framework
+   }
+
+```
+
