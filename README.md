@@ -190,7 +190,7 @@ Sometimes I use these options:
       }
    },
    generateComponents: {
-      schemasConst: true // Copy all schemas to a schemas.ts file, that can be used for building frontend forms/validation dynamically for example
+      schemasConst: true // Copy all schemas to a schemas.ts file that can be used for building frontend forms/validation dynamically for example
    }
 
 ```
