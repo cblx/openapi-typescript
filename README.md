@@ -176,7 +176,7 @@ export class MyComponent{
 
 ## Advanced options
 
-The `openapi-typescript.config.js` supports some extra options. Those options can be found here:
+The `openapi-typescript.config.js` supports some extra options. These options can be found here:
 
 https://github.com/cblx/openapi-typescript/blob/main/tool/config.ts
 
@@ -186,11 +186,11 @@ Sometimes I use these options:
 
    models: {
       default: {
-          generateMetadata: true // So I can reference types and field names
+          generateMetadata: true // Can be used as a way to reference type names and field names
       }
    },
    generateComponents: {
-      schemasConst: true // So I can use model schemas to build forms/validation dynamically in Angular or in some other framework
+      schemasConst: true // Copy all schemas to a schemas.ts file, that can be used for building frontend forms/validation dynamically for example
    }
 
 ```
