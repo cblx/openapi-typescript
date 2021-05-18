@@ -180,7 +180,7 @@ The `openapi-typescript.config.js` supports some extra options. These options ca
 
 https://github.com/cblx/openapi-typescript/blob/main/tool/config.ts
 
-Sometimes I use these options:
+Sometimes I use the following options:
 
 ```
 
