@@ -51,7 +51,7 @@ Examples: [Fetch](#fetch-connector-example), [Angular](#angular-connector-exampl
 
 ## Friendly function names
 
-For friendly function names, set the desired name in the operantionId field of your schema.
+For friendly function names, set the desired name in the operantionId field of each path definition.
 
 
 
