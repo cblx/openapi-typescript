@@ -41,7 +41,6 @@ export function organizeActionsInClients(json: OpenAPIObject) {
                 functionName = changeCase.camelCase(action.operationId);
             }
 
-            //Coloco a action dentro do client, como chave seria o nome final da função na classe de client
             clients[clientName].actions[functionName] = action;
         }
     }
