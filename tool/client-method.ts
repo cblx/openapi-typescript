@@ -48,7 +48,7 @@ export class ClientMethod {
 
 
         if ('requestBody' in pathItem) {
-            let requestBodyContent = pathItem.requestBody.content['application/json'];
+            let requestBodyContent = (pathItem.requestBody?.content ?? {})['application/json'];
             if (requestBodyContent) {
                 this.bodyParameter = requestBodyContent.schema;
             }

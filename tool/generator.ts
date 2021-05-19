@@ -30,7 +30,7 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
         fileManager.write('definition.ts', `export const openApiDefinition = ${JSON.stringify(json, null, 2)};`);
     }
     if(config.generateComponents?.schemasConst){
-        fileManager.write('schemas.ts', `export const schemas = ${JSON.stringify(json.components.schemas, null, 2)};`);
+        fileManager.write('schemas.ts', `export const schemas = ${JSON.stringify(json.components?.schemas || {}, null, 2)};`);
     }
 
     const mainContext = new SolutionContext();
@@ -41,7 +41,7 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
         mainContext.services.push(new ClientType(c, organizedClients[c].actions, mainContext, config));
     }
 
-    for (let id in json.components.schemas) {
+    for (let id in json.components?.schemas) {
         let schema: SchemaObject = json.components.schemas[id];
         if ('enum' in schema) {
             mainContext.modelsAndEnums[id] = new EnumType(id, schema);

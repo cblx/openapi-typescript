@@ -1,6 +1,5 @@
 import { OpenAPIObject, PathItemObject } from 'openapi3-ts';
 import * as changeCase from 'change-case';
-
 export function organizeActionsInClients(json: OpenAPIObject) {
     const clients:{
         [name: string] : { actions: { [name: string]: PathItemObject } }
@@ -11,8 +10,8 @@ export function organizeActionsInClients(json: OpenAPIObject) {
 
         for (let a in actions) {
             let action = actions[a];
-            let clientName = action.tags[0];
-            //Controllers genéricos trarão ` no nome
+            let clientName = (action.tags || ['Default'])[0];
+            // dotnet generic controllers will have ` in the name
             clientName = clientName.replace('`', '');
 
             if (!(clientName in clients)) {
@@ -31,12 +30,6 @@ export function organizeActionsInClients(json: OpenAPIObject) {
             // Fallback function name
             let functionName = `${a}${changeCase.pascalCase(action.path)}`;
 
-            // Remove this support. "operationId" should be the only valid option for setting function name
-            if (action.tags[1]) {
-                functionName = changeCase.camelCase(action.tags[1]);
-            }
-
-            // Function name from operationId
             if (action.operationId) {
                 functionName = changeCase.camelCase(action.operationId);
             }
