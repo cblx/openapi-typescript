@@ -24,7 +24,10 @@ export class ClientMethodOld {
         return this.bodyParameter != null;
     }
     
-    constructor(id: string, private pathItem: PathItemObject) {
+    constructor(
+        id: string, 
+        private pathItem: PathItemObject
+    ) {
         this.name = id;
 
         this.path = pathItem.path;

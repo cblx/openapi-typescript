@@ -9,6 +9,7 @@ export function organizeActionsInClients(json: OpenAPIObject) {
         let actions: { [key: string]: PathItemObject } = json.paths[p];
 
         for (let a in actions) {
+            if(a === 'parameters'){ continue; }
             let action = actions[a];
             let clientName = (action.tags || ['Default'])[0];
             // dotnet generic controllers will have ` in the name
@@ -34,7 +35,11 @@ export function organizeActionsInClients(json: OpenAPIObject) {
                 functionName = changeCase.camelCase(action.operationId);
             }
 
+            // Mix root parameters with the action parameters
+            action.parameters = [...(<any>actions.parameters ?? []), ...(action.parameters ?? []) ];
+
             clients[clientName].actions[functionName] = action;
+            
         }
     }
 
