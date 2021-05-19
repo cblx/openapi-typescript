@@ -5,30 +5,21 @@ export function organizeActionsInClients(json: OpenAPIObject) {
     const clients:{
         [name: string] : { actions: { [name: string]: PathItemObject } }
     } = {};
-    //Entre os paths
-    for (let p in json.paths) {
-
-        //Pego as actions
+    
+    for (let p in json.paths) {       
         let actions: { [key: string]: PathItemObject } = json.paths[p];
 
-        //Para cada action
         for (let a in actions) {
-            //Verifico o nome do client, que seria o primeiro item em "tags"
             let action = actions[a];
             let clientName = action.tags[0];
             //Controllers genéricos trarão ` no nome
             clientName = clientName.replace('`', '');
 
-            //Crio o registro de client se não houver
             if (!(clientName in clients)) {
                 clients[clientName] = {
                     actions: {}
                 };
             }
-
-            //Crio o caminho relativo do endpoint
-            //Determino o path relativo
-            // action.path = p.replace(`/${clientName}`, '');
 
             action.path = p;
             if (action.path.startsWith('/')) {
