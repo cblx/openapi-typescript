@@ -41,6 +41,9 @@ export class TypeContext {
         let rows = this.referencedTypes.map(r => {
             let relativePath = path.relative(this.typeDefinition.dir, r.dir).replace('\\', '/');
             if(relativePath[0] != '.'){
+                if(relativePath[0] != '/'){
+                    relativePath = '/' + relativePath;    
+                }
                 relativePath = '.' + relativePath;
             }
             let fileName = r.fileName.replace('.ts', '');
