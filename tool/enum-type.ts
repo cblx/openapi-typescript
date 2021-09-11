@@ -1,11 +1,11 @@
 import { SchemaObject } from 'openapi3-ts';
 import { OpenApiTypeScriptConfig } from './config';
-import { TypeBase } from './type-base';
+import { SchemaTypeBase } from './schema-type-base';
 
-export class EnumType extends TypeBase {
+export class EnumType extends SchemaTypeBase {
     constructor(
         public readonly id: string, 
-        public readonly schema: SchemaObject,
+        schema: SchemaObject,
         config: OpenApiTypeScriptConfig) {
         super(id, schema, config);
     }

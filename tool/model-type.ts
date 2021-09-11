@@ -1,12 +1,12 @@
 import { SchemaObject } from 'openapi3-ts';
-import { TypeBase } from './type-base';
 import { BaseContext } from './base-context';
 import { OpenApiTypeScriptConfig } from './config';
+import { SchemaTypeBase } from './schema-type-base';
 
-export class ModelType extends TypeBase {
+export class ModelType extends SchemaTypeBase {
     constructor(
         public readonly id: string,
-        public readonly schema: SchemaObject,
+        schema: SchemaObject,
         private baseContext: BaseContext,
         config: OpenApiTypeScriptConfig) {
         super(id, schema, config);
