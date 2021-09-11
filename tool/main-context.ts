@@ -13,6 +13,9 @@ export class SolutionContext extends BaseContext {
         for(let modelId in this.modelsAndEnums)        {
             let model = this.modelsAndEnums[modelId];
             result[model.getPath()] = model.write();
+            if(model.typeConfig.generateSchemaFile === true){
+                result[model.getSchemaFilePath()] = model.writeSchemaFile();
+            }
         }
 
         for(let service of this.services){

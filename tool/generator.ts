@@ -44,7 +44,7 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
     for (let id in json.components?.schemas) {
         let schema: SchemaObject = json.components.schemas[id];
         if ('enum' in schema) {
-            mainContext.modelsAndEnums[id] = new EnumType(id, schema);
+            mainContext.modelsAndEnums[id] = new EnumType(id, schema, config);
         } else {
             mainContext.modelsAndEnums[id] = new ModelType(id, schema, mainContext, config);
         }

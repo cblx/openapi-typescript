@@ -1,9 +1,13 @@
 import { SchemaObject } from 'openapi3-ts';
+import { OpenApiTypeScriptConfig } from './config';
 import { TypeBase } from './type-base';
 
 export class EnumType extends TypeBase {
-    constructor(public readonly id: string, public readonly schema: SchemaObject) {
-        super(id);
+    constructor(
+        public readonly id: string, 
+        public readonly schema: SchemaObject,
+        config: OpenApiTypeScriptConfig) {
+        super(id, schema, config);
     }
 
     write() {

@@ -8,8 +8,8 @@ export class ModelType extends TypeBase {
         public readonly id: string,
         public readonly schema: SchemaObject,
         private baseContext: BaseContext,
-        private config: OpenApiTypeScriptConfig) {
-        super(id);
+        config: OpenApiTypeScriptConfig) {
+        super(id, schema, config);
     }
     write() {
         let context = this.baseContext.createTypeContext(this);
@@ -23,10 +23,7 @@ export class ModelType extends TypeBase {
         }
         content += '}\n\n';
 
-        const defaultConfig = this.config.models?.default || {};
-        const modelConfig = this.config?.models ? this.config.models[this.id] || {} : {};
-        const mixedConfig = { ...defaultConfig, ...modelConfig };
-        if (mixedConfig.generateMetadata === true) {
+        if (this.typeConfig.generateMetadata === true) {
             content += this.writeMetadata();
         }
 
