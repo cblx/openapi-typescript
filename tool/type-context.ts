@@ -47,7 +47,8 @@ export class TypeContext {
                 relativePath = '.' + relativePath;
             }
             let fileName = r.fileName.replace('.ts', '');
-            return `import { ${r.name} } from '${relativePath}/${fileName}';`;
+            const finalPath = (relativePath + '/' + fileName).replace('.//', './');
+            return `import { ${r.name} } from '${finalPath}';`;
         });
         let rowsText = rows.join('\n');
         if(rowsText){ rowsText += '\n'; }
