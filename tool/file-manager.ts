@@ -1,12 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as crypto from 'crypto';
 import * as colors from 'colors';
 
 const stateFileName = '.openapi-typescript';
 export class FileManager {
-    private currentState: FilesState = { files: {} };
-    private newState: FilesState = { files: {} };
+    private currentState: string[] = [];
+    private newState: string[] = [];
 
     constructor(private dir: string) {
         this.ensureRootDirExists();
@@ -24,20 +23,21 @@ export class FileManager {
         if (fs.existsSync(stateFilePath)) {
             try {
                 const content = fs.readFileSync(stateFilePath, { encoding: 'utf8', flag: 'r' });
-                this.currentState = JSON.parse(content);
+                let state = JSON.parse(content);
+                if(!Array.isArray(state)){ return; }
+                state = state.filter(item => typeof item ==='string');
+                this.currentState = state;
             } catch { }
         }
     }
 
     write(fileName: string, content: string) {
-        const hash = crypto.createHash('sha1').update(content).digest('base64');
         const filePath = path.join(this.dir, fileName);
-        this.newState.files[filePath] = hash;
-        if (this.currentState.files[filePath] == hash) {
-            return;
-        }
+        this.newState.push(filePath);
         ensureFileDirExists(filePath);
         if (fs.existsSync(filePath)) {
+            const buff = Buffer.from(content);
+            if(buff.equals(fs.readFileSync(filePath))){ return; }
             console.log(colors.blue(`${filePath} - CHANGED`));
         }else{
             console.log(colors.cyan(`${filePath} - ADDED`));
@@ -46,11 +46,10 @@ export class FileManager {
     }
 
     deleteOldFiles() {
-        for (let path in this.currentState.files) {
-            if (!(path in this.newState.files)) {
-                fs.unlinkSync(path);
-                console.log(colors.red(`${path} - DELETED`));
-            }
+        for(let path of this.currentState){
+            if(this.newState.includes(path)){ continue; }
+            fs.unlinkSync(path);
+            console.log(colors.red(`${path} - DELETED`));
         }
     }
 
@@ -59,12 +58,8 @@ export class FileManager {
         const newStateContent = JSON.stringify(this.newState, null, 2);
         fs.writeFileSync(stateFilePath, newStateContent);
         this.currentState = JSON.parse(newStateContent);
-        this.newState = { files: {} };
+        this.newState = [];
     }
-}
-
-interface FilesState {
-    files: { [path: string]: string };
 }
 
 function ensureFileDirExists(filePath) {
