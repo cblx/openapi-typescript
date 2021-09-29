@@ -14,7 +14,7 @@ export class ClientType extends TypeBase {
     methods: (ClientMethod | ClientMethodOld)[] = [];
 
     constructor(
-        private id: string, 
+        id: string, 
         private pathItems: { [name: string]: PathItemObject }, 
         private baseContext: BaseContext,
         private config: OpenApiTypeScriptConfig
