@@ -35,8 +35,11 @@ export abstract class SchemaTypeBase extends TypeBase {
 
     private writeSchemaRefs(allSchemas: SchemasObject) {
         const refsSchemas: { [key: string]: SchemaObject } = {};
+        (<any>refsSchemas)[this.id] = "####SELF_REF####";
         this.grabRefs(this.schema, allSchemas, refsSchemas);
-        return `\nexport const ${this.name}_REFS = ${JSON.stringify(refsSchemas, null, 4)};\n\n`;
+        let content = `\nexport const ${this.name}_REFS = ${JSON.stringify(refsSchemas, null, 4)};\n\n`;
+        content = content.replace('\"####SELF_REF####\"', this.id);
+        return content;
     }
 
     private grabRefs(schema: SchemaObject, allSchemas: SchemasObject, targetContainer: { [key: string]: SchemaObject }) {

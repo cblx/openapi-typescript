@@ -6,7 +6,7 @@ export abstract class TypeBase {
     dir: string = '/';
 
 
-    constructor(id: string) {
+    constructor(protected id: string) {
         this.name = id.replace('[]', 'Array');
         let splitted = this.name.split('.');
         this.name = [...splitted].reverse()[0];
