@@ -10,12 +10,13 @@ export class TypeContext {
 
     writeName(schema: SchemaObject) {
         if(!schema){ return 'any'; }
+        let ref = schema.$ref;
         if (schema.allOf) {
-            schema.$ref = schema.allOf[0].$ref;
+            ref = schema.allOf[0].$ref;
         }
 
-        if (schema.$ref) {
-            let id = schema.$ref.split('/').reverse()[0];
+        if (ref) {
+            let id = ref.split('/').reverse()[0];
             let refTypeDefinition = this.baseContext.modelsAndEnums[id];
 
             // Avoid self referencing importing

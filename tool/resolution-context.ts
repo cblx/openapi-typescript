@@ -13,12 +13,13 @@ export class ResolutionContext {
     }
 
     resolve(schema) {
+        let ref = schema.$ref;
         if (schema.allOf) {
-            schema.$ref = schema.allOf[0].$ref;
+            ref = schema.allOf[0].$ref;
         }
 
-        if (schema.$ref) {
-            let typeName = schema.$ref.split('/').reverse()[0];
+        if (ref) {
+            let typeName = ref.split('/').reverse()[0];
 
             // Avoid self referencing importing
             if (this.typeName != typeName) {
