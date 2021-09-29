@@ -2,6 +2,7 @@ import { ClientType } from './client-type';
 import { ClientMethod } from './client-method';
 import { TypeContext } from './type-context';
 import { ClientMethodOld } from './client-method-old';
+import { GenerateSchemaFileOptions } from './generate-schema-file-options';
 
 export interface OpenApiTypeScriptConfig {
     url?: string;
@@ -41,7 +42,7 @@ export interface OpenApiTypeScriptConfig {
              * Generate a file <model>.schema.ts
              * containing the correspondent openapi schema
              */
-            generateSchemaFile?:boolean
+            generateSchemaFile?:boolean | GenerateSchemaFileOptions
         }
     }
     /**

@@ -1,17 +1,18 @@
-import { SchemaObject } from "openapi3-ts";
+import { SchemaObject, SchemasObject } from "openapi3-ts";
 import { OpenApiTypeScriptConfig } from "./config";
+import { GenerateSchemaFileOptions } from "./generate-schema-file-options";
 import { TypeBase } from "./type-base";
 
 export abstract class SchemaTypeBase extends TypeBase {
     public typeConfig: {
         generateMetadata?: boolean,
-        generateSchemaFile?: boolean
+        generateSchemaFile?: boolean | GenerateSchemaFileOptions
     };
     constructor(
-        id: string, 
+        id: string,
         public readonly schema: SchemaObject,
         config: OpenApiTypeScriptConfig
-    ){
+    ) {
         super(id);
         const defaultConfig = config.models?.default || {};
         const modelConfig = config?.models ? config.models[id] || {} : {};
@@ -22,9 +23,40 @@ export abstract class SchemaTypeBase extends TypeBase {
         return this.getPath().replace('.ts', '.schema.ts');
     }
 
-    writeSchemaFile() {
+    writeSchemaFile(options: boolean | GenerateSchemaFileOptions, allSchemas: SchemasObject) {
         let content = `export const ${this.name}_SCHEMA = ${JSON.stringify(this.schema, null, 4)};\n\n`;
+        if (typeof options === "object") {
+            if (options.includeRefs) {
+                content += this.writeSchemaRefs(allSchemas);
+            }
+        }
         return content;
     }
+
+    private writeSchemaRefs(allSchemas: SchemasObject) {
+        const refsSchemas: { [key: string]: SchemaObject } = {};
+        this.grabRefs(this.schema, allSchemas, refsSchemas);
+        return `\nexport const ${this.name}_REFS = ${JSON.stringify(refsSchemas, null, 4)};\n\n`;
+    }
+
+    private grabRefs(schema: SchemaObject, allSchemas: SchemasObject, targetContainer: { [key: string]: SchemaObject }) {
+        if (!schema.properties) { return; }
+        for (const propName in schema.properties) {
+            const prop = schema.properties[propName];
+            let ref = prop.$ref;
+            if ('allOf' in prop && prop.allOf) {
+                ref = prop.allOf[0].$ref;
+            }
+            if(!ref){ continue; }
+            let typeName = ref.split('/').reverse()[0];
+            if(typeName in targetContainer){ continue; }
+            if(!(typeName in allSchemas)){ continue; }
+            targetContainer[typeName] = allSchemas[typeName];
+            this.grabRefs(prop, allSchemas, targetContainer);
+        }
+    }
+
+
+
 
 }
