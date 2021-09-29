@@ -52,7 +52,7 @@ export abstract class SchemaTypeBase extends TypeBase {
             if(typeName in targetContainer){ continue; }
             if(!(typeName in allSchemas)){ continue; }
             targetContainer[typeName] = allSchemas[typeName];
-            this.grabRefs(prop, allSchemas, targetContainer);
+            this.grabRefs(allSchemas[typeName], allSchemas, targetContainer);
         }
     }
 
