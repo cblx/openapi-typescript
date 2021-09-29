@@ -38,7 +38,7 @@ export abstract class SchemaTypeBase extends TypeBase {
         (<any>refsSchemas)[this.id] = "####SELF_REF####";
         this.grabRefs(this.schema, allSchemas, refsSchemas);
         let content = `\nexport const ${this.name}_REFS = ${JSON.stringify(refsSchemas, null, 4)};\n\n`;
-        content = content.replace('\"####SELF_REF####\"', this.id);
+        content = content.replace('\"####SELF_REF####\"', `${this.id}_SCHEMA`);
         return content;
     }
 
