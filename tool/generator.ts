@@ -13,10 +13,10 @@ import * as colors from 'colors';
 export async function generateFromEndpoint(config: OpenApiTypeScriptConfig) {
     let defEndpoint = config.url;
     let json: OpenAPIObject;
-    try{
+    try {
         let response = await fetch(defEndpoint);
         json = await response.json();
-    }catch(err){
+    } catch (err) {
         console.log(colors.red('Could not fetch OpenApi definition from ' + defEndpoint));
         console.log(err.message);
         return;
@@ -29,7 +29,7 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
     if (config.generateComponents?.definitionConst) {
         fileManager.write('definition.ts', `export const openApiDefinition = ${JSON.stringify(json, null, 2)};`);
     }
-    if(config.generateComponents?.schemasConst){
+    if (config.generateComponents?.schemasConst) {
         fileManager.write('schemas.ts', `export const schemas = ${JSON.stringify(json.components?.schemas || {}, null, 2)};`);
     }
 
@@ -51,17 +51,19 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
     }
 
     const result = mainContext.genereate();
-    const indexes: { [path: string]: string } = {};
-    for (let filePath in result) {
-        const dir = path.dirname(filePath);
-        indexes[dir] = indexes[dir] || '';
-        indexes[dir] += `export * from './${path.basename(filePath).replace('.ts', '')}';\n`;
-        fileManager.write(filePath, result[filePath]);
-    }
+    if (config?.generateComponents?.index) {
+        const indexes: { [path: string]: string } = {};
+        for (let filePath in result) {
+            const dir = path.dirname(filePath);
+            indexes[dir] = indexes[dir] || '';
+            indexes[dir] += `export * from './${path.basename(filePath).replace('.ts', '')}';\n`;
+            fileManager.write(filePath, result[filePath]);
+        }
 
-    for (let indexDir in indexes) {
-        const finalPath = path.join(indexDir, 'index.ts');
-        fileManager.write(finalPath, indexes[indexDir]);
+        for (let indexDir in indexes) {
+            const finalPath = path.join(indexDir, 'index.ts');
+            fileManager.write(finalPath, indexes[indexDir]);
+        }
     }
 
     fileManager.deleteOldFiles();

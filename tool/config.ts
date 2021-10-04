@@ -19,6 +19,11 @@ export interface OpenApiTypeScriptConfig {
     },
     generateComponents?: {
         /**
+         * Generate an index.ts files that
+         * exports all files in each dir
+         */
+        index?: boolean,
+        /**
          * Generate a definition.ts file exporting
          * a const with the full openapi definition
          */
