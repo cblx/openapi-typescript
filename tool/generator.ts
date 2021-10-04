@@ -51,15 +51,15 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
     }
 
     const result = mainContext.genereate();
+    const indexes: { [path: string]: string } = {};
+    for (let filePath in result) {
+        const dir = path.dirname(filePath);
+        indexes[dir] = indexes[dir] || '';
+        indexes[dir] += `export * from './${path.basename(filePath).replace('.ts', '')}';\n`;
+        fileManager.write(filePath, result[filePath]);
+    }
+    
     if (config?.generateComponents?.index) {
-        const indexes: { [path: string]: string } = {};
-        for (let filePath in result) {
-            const dir = path.dirname(filePath);
-            indexes[dir] = indexes[dir] || '';
-            indexes[dir] += `export * from './${path.basename(filePath).replace('.ts', '')}';\n`;
-            fileManager.write(filePath, result[filePath]);
-        }
-
         for (let indexDir in indexes) {
             const finalPath = path.join(indexDir, 'index.ts');
             fileManager.write(finalPath, indexes[indexDir]);
