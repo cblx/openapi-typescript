@@ -5,6 +5,7 @@ import { BaseContext } from './base-context';
 import { ClientMethod } from './client-method';
 import { OpenApiTypeScriptConfig } from './config';
 import { ClientMethodOld } from './client-method-old';
+import { EOL } from 'os';
 
 export class ClientType extends TypeBase {
     ctor = 'constructor(private connector: OpenApiConnector) {}';
@@ -54,21 +55,21 @@ export class ClientType extends TypeBase {
 
 
         let spacing = '    ';
-        content += '\n';
-        this.importsSection.forEach(str => content += `${str}\n`);
-        content += '\n';
-        content += '\n';
-        this.decoratorsSection.forEach(str => content += `${str}\n`);
-        content += '\n';
+        content += EOL;
+        this.importsSection.forEach(str => content += `${str}${EOL}`);
+        content += EOL;
+        content += EOL;
+        this.decoratorsSection.forEach(str => content += `${str}${EOL}`);
+        content += EOL;
 
         // Open class
-        content += `export class ${this.name} {\n`;
+        content += `export class ${this.name} {${EOL}`;
 
-        this.fieldsSection.forEach(str => content += `${spacing}${str}\n`);
-        content += '\n';
-        content += `${spacing}${this.ctor}\n\n`;
+        this.fieldsSection.forEach(str => content += `${spacing}${str}${EOL}`);
+        content += EOL;
+        content += `${spacing}${this.ctor}${EOL}${EOL}`;
 
-        this.methods.forEach(method => content += method.write(spacing, this.config, context) + '\n');
+        this.methods.forEach(method => content += method.write(spacing, this.config, context) + EOL);
 
         // Close class
         content += `}`;

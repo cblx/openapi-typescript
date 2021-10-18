@@ -1,4 +1,5 @@
 import { SchemaObject, SchemasObject } from "openapi3-ts";
+import { EOL } from "os";
 import { OpenApiTypeScriptConfig } from "./config";
 import { GenerateSchemaFileOptions } from "./generate-schema-file-options";
 import { TypeBase } from "./type-base";
@@ -24,7 +25,7 @@ export abstract class SchemaTypeBase extends TypeBase {
     }
 
     writeSchemaFile(options: boolean | GenerateSchemaFileOptions, allSchemas: SchemasObject) {
-        let content = `export const ${this.name}_SCHEMA = ${JSON.stringify(this.schema, null, 4)};\n\n`;
+        let content = `export const ${this.name}_SCHEMA = ${JSON.stringify(this.schema, null, 4)};${EOL}${EOL}`;
         if (typeof options === "object") {
             if (options.includeRefs) {
                 content += this.writeSchemaRefs(allSchemas);
@@ -37,7 +38,7 @@ export abstract class SchemaTypeBase extends TypeBase {
         const refsSchemas: { [key: string]: SchemaObject } = {};
         (<any>refsSchemas)[this.id] = "####SELF_REF####";
         this.grabRefs(this.schema, allSchemas, refsSchemas);
-        let content = `\nexport const ${this.name}_REFS = ${JSON.stringify(refsSchemas, null, 4)};\n\n`;
+        let content = `${EOL}export const ${this.name}_REFS = ${JSON.stringify(refsSchemas, null, 4)};${EOL}${EOL}`;
         content = content.replace('\"####SELF_REF####\"', `${this.id}_SCHEMA`);
         return content;
     }

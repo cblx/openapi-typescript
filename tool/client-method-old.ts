@@ -2,6 +2,7 @@ import { ParameterObject, PathItemObject, SchemaObject } from 'openapi3-ts';
 import { TypeContext } from "./type-context";
 import * as changeCase from 'change-case'
 import { OpenApiTypeScriptConfig } from './config';
+import { EOL } from 'os';
 
 export class ClientMethodOld {
     name = '';
@@ -101,12 +102,12 @@ export class ClientMethodOld {
 
     write(spacing: string, config: OpenApiTypeScriptConfig, context: TypeContext) {
         let bodyRequest = '';
-        bodyRequest += `const promise = this.connector.request(\n`;
-        bodyRequest += `    '${this.pathItem.httpMethod}',\n`;
-        bodyRequest += `    \`${this.path}\`,\n`;
-        bodyRequest += `    search,\n`;
-        bodyRequest += `    body\n`;
-        bodyRequest += `);\n`;
+        bodyRequest += `const promise = this.connector.request(${EOL}`;
+        bodyRequest += `    '${this.pathItem.httpMethod}',${EOL}`;
+        bodyRequest += `    \`${this.path}\`,${EOL}`;
+        bodyRequest += `    search,${EOL}`;
+        bodyRequest += `    body${EOL}`;
+        bodyRequest += `);${EOL}`;
 
         let bodyLines = [...this.preBodyLines];
         bodyLines.push(bodyRequest);
@@ -120,13 +121,13 @@ export class ClientMethodOld {
         let parameters = this.writeParameters(context);
         let returnType = this.writeReturnType(context);
 
-        content += `${spacing}async ${this.name}(${parameters}) : ${returnType} {\n`;
+        content += `${spacing}async ${this.name}(${parameters}) : ${returnType} {${EOL}`;
         content += spacing;
         content += spacing;
-        let body = bodyLines.join('\n');
-        content += body.split('\n').join(`\n${spacing}${spacing}`);
-        content += '\n';
-        content += `${spacing}}\n`;
+        let body = bodyLines.join(EOL);
+        content += body.split(EOL).join(`${EOL}${spacing}${spacing}`);
+        content += EOL;
+        content += `${spacing}}${EOL}`;
         return content;
     }
 }

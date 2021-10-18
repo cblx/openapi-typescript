@@ -9,6 +9,7 @@ import * as path from 'path';
 import fetch from 'node-fetch';
 import { FileManager } from './file-manager';
 import * as colors from 'colors';
+import { EOL } from 'os';
 
 export async function generateFromEndpoint(config: OpenApiTypeScriptConfig) {
     let defEndpoint = config.url;
@@ -55,7 +56,7 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
     for (let filePath in result) {
         const dir = path.dirname(filePath);
         indexes[dir] = indexes[dir] || '';
-        indexes[dir] += `export * from './${path.basename(filePath).replace('.ts', '')}';\n`;
+        indexes[dir] += `export * from './${path.basename(filePath).replace('.ts', '')}';${EOL}`;
         fileManager.write(filePath, result[filePath]);
     }
     

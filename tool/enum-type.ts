@@ -1,4 +1,5 @@
 import { SchemaObject } from 'openapi3-ts';
+import { EOL } from 'os';
 import { OpenApiTypeScriptConfig } from './config';
 import { SchemaTypeBase } from './schema-type-base';
 
@@ -13,9 +14,9 @@ export class EnumType extends SchemaTypeBase {
     write() {
         let content = '';
         let schema = this.schema;
-        content += `export enum ${this.name} {\n`;
+        content += `export enum ${this.name} {${EOL}`;
         const names = schema['x-enum-varnames'] || schema.enum.map(e => this.writeEnumNameFromValue(e));
-        content += `  ${schema.enum.map((e, i) => `${names[i]} = ${this.writeEnumValue(e)}`).join(',\n  ')}\n`;
+        content += `  ${schema.enum.map((e, i) => `${names[i]} = ${this.writeEnumValue(e)}`).join(`,${EOL}  `)}${EOL}`;
         content += '}';
         return content;
     }

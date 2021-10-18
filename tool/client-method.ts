@@ -2,6 +2,7 @@ import { ParameterObject, PathItemObject, SchemaObject } from 'openapi3-ts';
 import { TypeContext } from "./type-context";
 import * as changeCase from 'change-case'
 import { OpenApiTypeScriptConfig } from './config';
+import { EOL } from 'os';
 
 export class ClientMethod {
     name = '';
@@ -75,7 +76,7 @@ export class ClientMethod {
         const queryParameters = this.queryAndPathParameters?.filter(p => p.in == 'query') || [];
         if (!queryParameters.length && !pathParameters.length && !this.bodyParameter) { return ''; }
 
-        let parametersText = 'parameters: {\n';
+        let parametersText = `parameters: {${EOL}`;
 
         let parts: string[] = [];
         if (pathParameters.length) {
@@ -88,8 +89,8 @@ export class ClientMethod {
             parts.push(`${spacing}${spacing}body: ${context.writeName(this.bodyParameter)}`);
         }
 
-        parametersText += parts.join(',\n');
-        parametersText += `\n${spacing}}`;
+        parametersText += parts.join(`,${EOL}`);
+        parametersText += `${EOL}${spacing}}`;
 
         return parametersText;
     }
@@ -107,16 +108,16 @@ export class ClientMethod {
 
     write(spacing: string, config: OpenApiTypeScriptConfig, context: TypeContext) {
         let bodyRequest = '';
-        bodyRequest += `const promise = this.connector.request(\n`;
-        bodyRequest += `    '${this.pathItem.httpMethod}',\n`;
-        bodyRequest += `    \`${this.path}\`,\n`;
-        bodyRequest += `    search,\n`;
+        bodyRequest += `const promise = this.connector.request(${EOL}`;
+        bodyRequest += `    '${this.pathItem.httpMethod}',${EOL}`;
+        bodyRequest += `    \`${this.path}\`,${EOL}`;
+        bodyRequest += `    search,${EOL}`;
         if (this.bodyParameter) {
-            bodyRequest += `    parameters.body\n`;
+            bodyRequest += `    parameters.body${EOL}`;
         }else{
-            bodyRequest += `    undefined\n`;
+            bodyRequest += `    undefined${EOL}`;
         }
-        bodyRequest += `);\n`;
+        bodyRequest += `);${EOL}`;
 
         let bodyLines = [...this.preBodyLines];
         bodyLines.push(bodyRequest);
@@ -130,13 +131,13 @@ export class ClientMethod {
         let parameters = this.writeParameters(context, spacing);
         let returnType = this.writeReturnType(context);
 
-        content += `${spacing}async ${this.name}(${parameters}) : ${returnType} {\n`;
+        content += `${spacing}async ${this.name}(${parameters}) : ${returnType} {${EOL}`;
         content += spacing;
         content += spacing;
-        let body = bodyLines.join('\n');
-        content += body.split('\n').join(`\n${spacing}${spacing}`);
-        content += '\n';
-        content += `${spacing}}\n`;
+        let body = bodyLines.join(EOL);
+        content += body.split(EOL).join(`${EOL}${spacing}${spacing}`);
+        content += EOL;
+        content += `${spacing}}${EOL}`;
         return content;
     }
 }

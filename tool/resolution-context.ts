@@ -1,4 +1,5 @@
 import * as changeCase from 'change-case';
+import { EOL } from 'os';
 
 export class ResolutionContext {
     imports: { [key: string]: boolean; } = {};
@@ -27,7 +28,7 @@ export class ResolutionContext {
                 //Alguns tipos array virão com [], quando dentro de generics
                 typeName = typeName.replace('[]', 'Array');
 
-                this.imports[`import { ${typeName} } from '.${this.importsPath}/${changeCase.paramCase(typeName)}';\n`] = true;
+                this.imports[`import { ${typeName} } from '.${this.importsPath}/${changeCase.paramCase(typeName)}';${EOL}`] = true;
             }
             return typeName;
         }

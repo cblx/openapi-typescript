@@ -2,6 +2,7 @@ import { SchemaObject } from 'openapi3-ts';
 import * as path from 'path';
 import { TypeBase } from './type-base';
 import { BaseContext } from './base-context';
+import { EOL } from 'os';
 
 
 export class TypeContext {
@@ -51,8 +52,8 @@ export class TypeContext {
             const finalPath = (relativePath + '/' + fileName).replace('.//', './');
             return `import { ${r.name} } from '${finalPath}';`;
         });
-        let rowsText = rows.join('\n');
-        if(rowsText){ rowsText += '\n'; }
+        let rowsText = rows.join(EOL);
+        if(rowsText){ rowsText += EOL; }
         return rowsText;
     }
 }

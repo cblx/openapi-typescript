@@ -1,4 +1,5 @@
 import { SchemaObject } from 'openapi3-ts';
+import { EOL } from 'os';
 import { BaseContext } from './base-context';
 import { OpenApiTypeScriptConfig } from './config';
 import { SchemaTypeBase } from './schema-type-base';
@@ -15,13 +16,13 @@ export class ModelType extends SchemaTypeBase {
         let context = this.baseContext.createTypeContext(this);
         let content = '';
         let schema = this.schema;
-        content += `export interface ${this.name} {\n`;
+        content += `export interface ${this.name} {${EOL}`;
         for (let p in schema.properties) {
             let prop = schema.properties[p] as SchemaObject;
             let propTypeName = context.writeName(prop);
-            content += `    '${p}': ${propTypeName} ${prop.nullable ? '| null' : ''};\n`;
+            content += `    '${p}': ${propTypeName} ${prop.nullable ? '| null' : ''};${EOL}`;
         }
-        content += '}\n\n';
+        content += `}${EOL}${EOL}`;
 
         if (this.typeConfig.generateMetadata === true) {
             content += this.writeMetadata();
@@ -34,20 +35,20 @@ export class ModelType extends SchemaTypeBase {
 
     private writeMetadata() {
         const schema = this.schema;
-        let content = `const schema = ${JSON.stringify(schema, null, 4)};\n\n`;
+        let content = `const schema = ${JSON.stringify(schema, null, 4)};${EOL}${EOL}`;
 
         //Crio um tipo fisico para referenciarmos names
-        content += `export class ${this.name} {\n`;
-        content += `    static '$' = '${this.name}';\n`;
+        content += `export class ${this.name} {${EOL}`;
+        content += `    static '$' = '${this.name}';${EOL}`;
 
         //Importante manter o $ aqui, uma vez que nomes de campos
         //podem conflitar com coisas nativas do javascript.
         //Por exemplo, o campo 'name' conflitaria com Function.name,
         //que está em toda classe.
         for (let p in schema.properties) {
-            content += `    static '$${p}' = '${p}';\n`;
+            content += `    static '$${p}' = '${p}';${EOL}`;
         }
-        content += `    static schema = schema;\n`;
+        content += `    static schema = schema;${EOL}`;
         content += `}`;
         return content;
     }
