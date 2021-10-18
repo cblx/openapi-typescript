@@ -19,7 +19,7 @@ openapi client generator for typescript
 
 create an openapi-typescript.config.js
 
-```
+```js
 var config = {
     url: "<url>/swagger.json",
     outputDir: "./src/client",
@@ -34,7 +34,7 @@ execute it:
 
 Then create an implementation for your connector using the tool of your choice (fetch, jquery ajax, etc...).
 
-```
+```js
 export class MyAppConnector implements OpenApiConnector {
      async request(method: string, path: string, parameters: any, body: any) {
          ... implementation ...
@@ -42,7 +42,7 @@ export class MyAppConnector implements OpenApiConnector {
 }
 ```
 Use your connector with your client api service.
-```
+```js
 var myApi = new MyApiClient(new MyAppConnector());
 let result = await myApi.get();
 ```
@@ -63,7 +63,7 @@ This tool supports the 'x-enum-varnames' extension
 
 ## Fetch connector example
 
-```
+```js
 import { OpenApiConnector } from "@cblx-br/openapi-typescript";
 
 class MyAppConnector extends OpenApiConnector {
@@ -104,7 +104,7 @@ export const connector = new MyConnector();
 
 create an app-connector.ts
 
-```
+```js
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { OpenApiConnector } from '@cblx-br/openapi-typescript';
@@ -127,7 +127,7 @@ export class MyAppConnector implements OpenApiConnector {
 ```
 
 app.module.ts
-```
+```js
 @NgModule({
   declarations: [...],
   imports: [
@@ -148,7 +148,7 @@ export class AppModule { }
 
 openapi-typescript.config.js
 
-```
+```js
 var config = {
     url: "<url>/swagger.json",
     outputDir: "./src/client",
@@ -165,7 +165,7 @@ module.exports = config;
 
 Then inject your client api services wherever you need...
 
-```
+```js
 @Component(...)
 export class MyComponent{
     constructor(myApiClient: MyApiClient){
@@ -182,7 +182,7 @@ https://github.com/cblx/openapi-typescript/blob/main/tool/config.ts
 
 Sometimes I use the following options:
 
-```
+```js
 
    models: {
       default: {
