@@ -7,6 +7,7 @@ import { TypeBase } from "./type-base";
 export abstract class SchemaTypeBase extends TypeBase {
     public typeConfig: {
         generateMetadata?: boolean,
+        generateMetadataFile?: boolean,
         generateSchemaFile?: boolean | GenerateSchemaFileOptions
     };
     constructor(
@@ -24,6 +25,10 @@ export abstract class SchemaTypeBase extends TypeBase {
         return this.getPath().replace('.ts', '.schema.ts');
     }
 
+    getMetaFilePath() {
+        return this.getPath().replace('.ts', '.meta.ts');
+    }
+
     writeSchemaFile(options: boolean | GenerateSchemaFileOptions, allSchemas: SchemasObject) {
         let content = `export const ${this.name}_SCHEMA = ${JSON.stringify(this.schema, null, 4)};${EOL}${EOL}`;
         if (typeof options === "object") {
@@ -31,6 +36,23 @@ export abstract class SchemaTypeBase extends TypeBase {
                 content += this.writeSchemaRefs(allSchemas);
             }
         }
+        return content;
+    }
+
+    writeMetaFile(){
+        const schema = this.schema;
+
+        let content = ``;
+        content += `export const ${this.name}_META = {${EOL}`;
+        content += `    name: '${this.name}',${EOL}`;
+        content += `    properties: {`;
+        const properties = [];
+        for(let p in schema.properties){
+            properties.push(`       ${p}: '${p}'`);
+        }
+        content += properties.join(`,${EOL}`);
+        content += `${EOL}    }`;
+        content += `}`;
         return content;
     }
 

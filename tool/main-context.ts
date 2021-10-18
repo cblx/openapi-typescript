@@ -17,6 +17,9 @@ export class SolutionContext extends BaseContext {
             if(model.typeConfig.generateSchemaFile){
                 result[model.getSchemaFilePath()] = model.writeSchemaFile(model.typeConfig.generateSchemaFile, this.allSchemas);
             }
+            if(model.typeConfig.generateMetadataFile){
+                result[model.getMetaFilePath()] = model.writeMetaFile();
+            }
         }
 
         for(let service of this.services){

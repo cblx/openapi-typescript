@@ -37,14 +37,9 @@ export class ModelType extends SchemaTypeBase {
         const schema = this.schema;
         let content = `const schema = ${JSON.stringify(schema, null, 4)};${EOL}${EOL}`;
 
-        //Crio um tipo fisico para referenciarmos names
         content += `export class ${this.name} {${EOL}`;
         content += `    static '$' = '${this.name}';${EOL}`;
 
-        //Importante manter o $ aqui, uma vez que nomes de campos
-        //podem conflitar com coisas nativas do javascript.
-        //Por exemplo, o campo 'name' conflitaria com Function.name,
-        //que está em toda classe.
         for (let p in schema.properties) {
             content += `    static '$${p}' = '${p}';${EOL}`;
         }

@@ -44,6 +44,12 @@ export interface OpenApiTypeScriptConfig {
              */
             generateMetadata?: boolean,
             /**
+             * Generate a file <model>.meta.ts
+             * containing information about
+             * the type and it's fields names
+             */
+            generateMetadataFile?: boolean,
+            /**
              * Generate a file <model>.schema.ts
              * containing the correspondent openapi schema
              */
