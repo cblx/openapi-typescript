@@ -41,17 +41,14 @@ export abstract class SchemaTypeBase extends TypeBase {
 
     writeMetaFile(){
         const schema = this.schema;
-
         let content = ``;
-        content += `export const ${this.name}_META = {${EOL}`;
-        content += `    name: '${this.name}',${EOL}`;
-        content += `    properties: {${EOL}`;
+        content += `export const ${this.name}_PROP_NAMES = {${EOL}`;
         const properties = [];
         for(let p in schema.properties){
-            properties.push(`       ${p}: { name: '${p}' }`);
+            properties.push(`   ${p}: '${p}'`);
         }
         content += properties.join(`,${EOL}`);
-        content += `${EOL}    }${EOL}`;
+        content += EOL;
         content += `}`;
         return content;
     }
@@ -81,8 +78,4 @@ export abstract class SchemaTypeBase extends TypeBase {
             this.grabRefs(allSchemas[typeName], allSchemas, targetContainer);
         }
     }
-
-
-
-
 }
