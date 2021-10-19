@@ -48,10 +48,10 @@ export abstract class SchemaTypeBase extends TypeBase {
         content += `    properties: {`;
         const properties = [];
         for(let p in schema.properties){
-            properties.push(`       ${p}: '${p}'`);
+            properties.push(`       ${p}: { name: '${p}' }`);
         }
         content += properties.join(`,${EOL}`);
-        content += `${EOL}    }`;
+        content += `${EOL}    }${EOL}`;
         content += `}`;
         return content;
     }
