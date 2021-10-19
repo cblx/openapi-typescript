@@ -45,7 +45,7 @@ export abstract class SchemaTypeBase extends TypeBase {
         let content = ``;
         content += `export const ${this.name}_META = {${EOL}`;
         content += `    name: '${this.name}',${EOL}`;
-        content += `    properties: {`;
+        content += `    properties: {${EOL}`;
         const properties = [];
         for(let p in schema.properties){
             properties.push(`       ${p}: { name: '${p}' }`);
