@@ -1,6 +1,9 @@
 import { SchemasObject } from 'openapi3-ts';
 import { BaseContext } from './base-context';
 import { ClientType } from './client-type';
+import { GenerateSchemaFileOptions } from './generate-schema-file-options';
+import { ModelType } from './model-type';
+import { SchemaTypeBase } from './schema-type-base';
 
 
 export class SolutionContext extends BaseContext {
@@ -15,7 +18,8 @@ export class SolutionContext extends BaseContext {
             let model = this.modelsAndEnums[modelId];
             result[model.getPath()] = model.write();
             if(model.typeConfig.generateSchemaFile){
-                result[model.getSchemaFilePath()] = model.writeSchemaFile(model.typeConfig.generateSchemaFile, this.allSchemas);
+                //result[model.getSchemaFilePath()] = model.writeSchemaFile(model.typeConfig.generateSchemaFile);
+                this.generateSchemaFile(model, model.typeConfig.generateSchemaFile, result);
             }
             if(model.typeConfig.generateMetadataFile){
                 result[model.getMetaFilePath()] = model.writeMetaFile();
@@ -26,5 +30,18 @@ export class SolutionContext extends BaseContext {
             result[service.getPath()] = service.write();
         }
         return result;
+    }
+
+    private generateSchemaFile(model: SchemaTypeBase, options: boolean | GenerateSchemaFileOptions, result: { [key: string]: string }){
+        const path = model.getSchemaFilePath();
+        if(path in result){ return; }
+        result[path] = model.writeSchemaFile(model.typeConfig.generateSchemaFile);
+        if(model instanceof ModelType && typeof options === 'object' && options.includeRefs === true){
+            const refTypes = model.getReferencedTypes();
+            for(let t of refTypes){
+                this.generateSchemaFile(t as SchemaTypeBase, options, result);
+            }
+        }
+        
     }
 }

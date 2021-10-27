@@ -1,11 +1,12 @@
-import { SchemaObject } from 'openapi3-ts';
+import { SchemaObject, SchemasObject } from 'openapi3-ts';
 import { EOL } from 'os';
 import { OpenApiTypeScriptConfig } from './config';
+import { GenerateSchemaFileOptions } from './generate-schema-file-options';
 import { SchemaTypeBase } from './schema-type-base';
 
 export class EnumType extends SchemaTypeBase {
     constructor(
-        public readonly id: string, 
+        public readonly id: string,
         schema: SchemaObject,
         config: OpenApiTypeScriptConfig) {
         super(id, schema, config);
@@ -22,7 +23,7 @@ export class EnumType extends SchemaTypeBase {
     }
 
     private writeEnumNameFromValue(value: any) {
-        if(this.isNumeric(value)){ return `_${value}`; }
+        if (this.isNumeric(value)) { return `_${value}`; }
         return value;
     }
 
@@ -36,5 +37,18 @@ export class EnumType extends SchemaTypeBase {
             return value;
         }
         return `'${value}'`;
+    }
+
+    writeSchemaFile(options: boolean | GenerateSchemaFileOptions) {
+        let content = `export const ${this.name}_SCHEMA = ${JSON.stringify(this.schema, null, 4)};${EOL}${EOL}`;
+        if (typeof options === "object") {
+            if (options.includeRefs) {
+                const refsSchemas: { [key: string]: string } = {};
+                refsSchemas[this.id] = "####SELF_REF####";
+                content += `${EOL}export const ${this.name}_REFS = ${JSON.stringify(refsSchemas, null, 4)};`;
+                content = content.replace('\"####SELF_REF####\"', `${this.id}_SCHEMA`);
+            }
+        }
+        return content;
     }
 }

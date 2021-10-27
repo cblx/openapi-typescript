@@ -1,5 +1,4 @@
-import { SchemaObject } from 'openapi3-ts';
-import * as path from 'path';
+import { SchemaObject, SchemasObject } from 'openapi3-ts';
 import { TypeBase } from './type-base';
 import { BaseContext } from './base-context';
 import { EOL } from 'os';
@@ -7,11 +6,10 @@ import { resolveImportPath } from './resolve-import-path';
 
 
 export class TypeContext {
-    private referencedTypes: TypeBase[] = [];
+    referencedTypes: TypeBase[] = [];
     constructor(private baseContext: BaseContext, private typeDefinition: TypeBase) { }
-
-    writeName(schema: SchemaObject) {
-        if(!schema){ return 'any'; }
+   
+    loadReferenceIfRef(schema: SchemaObject){
         let ref = schema.$ref;
         if (schema.allOf) {
             ref = schema.allOf[0].$ref;
@@ -23,12 +21,18 @@ export class TypeContext {
 
             // Avoid self referencing importing
             if (this.typeDefinition != refTypeDefinition) {
-                if (this.referencedTypes.indexOf(refTypeDefinition) < 0) {
+                if (!this.referencedTypes.includes(refTypeDefinition)) {
                     this.referencedTypes.push(refTypeDefinition);
                 }
             }
-            return refTypeDefinition.name;
+            return refTypeDefinition;
         }
+    }
+
+    writeName(schema: SchemaObject) {
+        if(!schema){ return 'any'; }
+        let refTypeDefinition = this.loadReferenceIfRef(schema);
+        if(refTypeDefinition){ return refTypeDefinition.name; }
 
         switch (schema.type) {
             case 'array': return `Array<${this.writeName(schema.items)}>`;
