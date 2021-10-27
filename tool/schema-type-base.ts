@@ -20,25 +20,11 @@ export abstract class SchemaTypeBase extends TypeBase {
         const modelConfig = config?.models ? config.models[id] || {} : {};
         this.typeConfig = { ...defaultConfig, ...modelConfig };
     }
-
-    getSchemaFilePath() {
-        return this.getPath().replace('.ts', '.schema.ts');
-    }
-
+   
     getMetaFilePath() {
         return this.getPath().replace('.ts', '.meta.ts');
     }
-
-    writeSchemaFile(options: boolean | GenerateSchemaFileOptions, allSchemas: SchemasObject) {
-        let content = `export const ${this.name}_SCHEMA = ${JSON.stringify(this.schema, null, 4)};${EOL}${EOL}`;
-        if (typeof options === "object") {
-            if (options.includeRefs) {
-                content += this.writeSchemaRefs(allSchemas);
-            }
-        }
-        return content;
-    }
-
+    
     writeMetaFile(){
         const schema = this.schema;
         let content = ``;
@@ -52,6 +38,22 @@ export abstract class SchemaTypeBase extends TypeBase {
         content += `}`;
         return content;
     }
+
+    getSchemaFilePath() {
+        return this.getPath().replace('.ts', '.schema.ts');
+    }
+
+    writeSchemaFile(options: boolean | GenerateSchemaFileOptions, allSchemas: SchemasObject) {
+        let content = `export const ${this.name}_SCHEMA = ${JSON.stringify(this.schema, null, 4)};${EOL}${EOL}`;
+        if (typeof options === "object") {
+            if (options.includeRefs) {
+                content += this.writeSchemaRefs(allSchemas);
+            }
+        }
+        return content;
+    }
+
+
 
     private writeSchemaRefs(allSchemas: SchemasObject) {
         const refsSchemas: { [key: string]: SchemaObject } = {};

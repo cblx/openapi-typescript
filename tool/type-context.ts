@@ -3,6 +3,7 @@ import * as path from 'path';
 import { TypeBase } from './type-base';
 import { BaseContext } from './base-context';
 import { EOL } from 'os';
+import { resolveImportPath } from './resolve-import-path';
 
 
 export class TypeContext {
@@ -41,15 +42,10 @@ export class TypeContext {
 
     writeImports() {
         let rows = this.referencedTypes.map(r => {
-            let relativePath = path.relative(this.typeDefinition.dir, r.dir).replace('\\', '/');
-            if(relativePath[0] != '.'){
-                if(relativePath[0] != '/'){
-                    relativePath = '/' + relativePath;    
-                }
-                relativePath = '.' + relativePath;
-            }
-            let fileName = r.fileName.replace('.ts', '');
-            const finalPath = (relativePath + '/' + fileName).replace('.//', './');
+            const finalPath = resolveImportPath({
+                fromDir: this.typeDefinition.dir,
+                tsFile: r.getPath()
+            });
             return `import { ${r.name} } from '${finalPath}';`;
         });
         let rowsText = rows.join(EOL);
