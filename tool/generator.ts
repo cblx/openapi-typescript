@@ -34,7 +34,7 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
         fileManager.write('schemas.ts', `export const schemas = ${JSON.stringify(json.components?.schemas || {}, null, 2)};`);
     }
 
-    const mainContext = new SolutionContext(json.components.schemas);
+    const mainContext = new SolutionContext();
 
     const organizedClients = organizeActionsInClients(json);
 

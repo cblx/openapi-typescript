@@ -55,6 +55,7 @@ export class FileManager {
 
     saveState() {
         const stateFilePath = path.join(this.dir, stateFileName);
+        this.newState.sort();
         const newStateContent = JSON.stringify(this.newState, null, 2);
         fs.writeFileSync(stateFilePath, newStateContent);
         this.currentState = JSON.parse(newStateContent);

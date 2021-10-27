@@ -1,4 +1,3 @@
-import { SchemasObject } from 'openapi3-ts';
 import { BaseContext } from './base-context';
 import { ClientType } from './client-type';
 import { GenerateSchemaFileOptions } from './generate-schema-file-options';
@@ -8,7 +7,7 @@ import { SchemaTypeBase } from './schema-type-base';
 
 export class SolutionContext extends BaseContext {
     services: ClientType[] = [];
-    constructor(private allSchemas: SchemasObject) {
+    constructor() {
         super();
     }
 
