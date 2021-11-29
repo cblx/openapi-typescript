@@ -7,6 +7,7 @@ import { SolutionContext } from './main-context';
 import { organizeActionsInClients } from './organize';
 import * as path from 'path';
 import fetch from 'node-fetch';
+import { Agent } from 'https';
 import { FileManager } from './file-manager';
 import * as colors from 'colors';
 import { EOL } from 'os';
@@ -15,7 +16,9 @@ export async function generateFromEndpoint(config: OpenApiTypeScriptConfig) {
     let defEndpoint = config.url;
     let json: OpenAPIObject;
     try {
-        let response = await fetch(defEndpoint);
+        let response = await fetch(defEndpoint, {
+            agent: new Agent({ rejectUnauthorized: false })
+        });
         json = await response.json();
     } catch (err) {
         console.log(colors.red('Could not fetch OpenApi definition from ' + defEndpoint));
