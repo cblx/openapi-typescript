@@ -19,7 +19,7 @@ export async function generateFromEndpoint(config: OpenApiTypeScriptConfig) {
         let response = await fetch(defEndpoint, {
             agent: new Agent({ rejectUnauthorized: false })
         });
-        json = await response.json();
+        json = <OpenAPIObject>(await response.json());
     } catch (err) {
         console.log(colors.red('Could not fetch OpenApi definition from ' + defEndpoint));
         console.log(err.message);
