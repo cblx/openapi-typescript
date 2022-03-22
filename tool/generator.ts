@@ -6,11 +6,14 @@ import { ModelType } from './model-type';
 import { SolutionContext } from './main-context';
 import { organizeActionsInClients } from './organize';
 import * as path from 'path';
-import fetch from 'node-fetch';
+//import fetch from 'node-fetch';
 import { Agent } from 'https';
 import { FileManager } from './file-manager';
 import * as colors from 'colors';
 import { EOL } from 'os';
+
+import { RequestInfo, RequestInit } from "node-fetch";
+const fetch = (url: RequestInfo, init?: RequestInit) =>  import("node-fetch").then(({ default: fetch }) => fetch(url, init));
 
 export async function generateFromEndpoint(config: OpenApiTypeScriptConfig) {
     let defEndpoint = config.url;
