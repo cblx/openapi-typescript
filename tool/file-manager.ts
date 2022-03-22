@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as colors from 'colors';
+import colors from 'chalk';
 
 const stateFileName = '.openapi-typescript';
 export class FileManager {

@@ -1,4 +1,4 @@
-import { generate } from "./generator";
+import { generate } from "./generator.js";
 
 const json: any = {};
 

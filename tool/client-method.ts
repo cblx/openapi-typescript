@@ -1,7 +1,7 @@
 import { ParameterObject, PathItemObject, SchemaObject } from 'openapi3-ts';
-import { TypeContext } from "./type-context";
+import { TypeContext } from "./type-context.js";
 import * as changeCase from 'change-case'
-import { OpenApiTypeScriptConfig } from './config';
+import { OpenApiTypeScriptConfig } from './config.js';
 import { EOL } from 'os';
 
 export class ClientMethod {

@@ -1,19 +1,19 @@
 import { OpenAPIObject, SchemaObject } from 'openapi3-ts';
-import { ClientType } from './client-type';
-import { OpenApiTypeScriptConfig } from './config';
-import { EnumType } from './enum-type';
-import { ModelType } from './model-type';
-import { SolutionContext } from './main-context';
-import { organizeActionsInClients } from './organize';
+import { ClientType } from './client-type.js';
+import { OpenApiTypeScriptConfig } from './config.js';
+import { EnumType } from './enum-type.js';
+import { ModelType } from './model-type.js';
+import { SolutionContext } from './main-context.js';
+import { organizeActionsInClients } from './organize.js';
 import * as path from 'path';
-//import fetch from 'node-fetch';
+import fetch from 'node-fetch';
 import { Agent } from 'https';
-import { FileManager } from './file-manager';
-import * as colors from 'colors';
+import { FileManager } from './file-manager.js';
 import { EOL } from 'os';
+import colors from 'chalk';
 
-import { RequestInfo, RequestInit } from "node-fetch";
-const fetch = (url: RequestInfo, init?: RequestInit) =>  import("node-fetch").then(({ default: fetch }) => fetch(url, init));
+//import { RequestInfo, RequestInit } from "node-fetch";
+//const fetch = (url: RequestInfo, init?: RequestInit) =>  import("node-fetch").then(({ default: fetch }) => fetch(url, init));
 
 export async function generateFromEndpoint(config: OpenApiTypeScriptConfig) {
     let defEndpoint = config.url;

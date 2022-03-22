@@ -1,8 +1,8 @@
 import { SchemaObject, SchemasObject } from "openapi3-ts";
 import { EOL } from "os";
-import { OpenApiTypeScriptConfig } from "./config";
-import { GenerateSchemaFileOptions } from "./generate-schema-file-options";
-import { TypeBase } from "./type-base";
+import { OpenApiTypeScriptConfig } from "./config.js";
+import { GenerateSchemaFileOptions } from "./generate-schema-file-options.js";
+import { TypeBase } from "./type-base.js";
 
 export abstract class SchemaTypeBase extends TypeBase {
     public typeConfig: {

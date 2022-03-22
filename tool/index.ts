@@ -1,11 +1,15 @@
 #!/usr/bin/env node
-import * as program from 'commander';
+import { Command } from 'commander'; 
 import * as fs from 'fs';
-import * as colors from 'colors';
+import colors from 'chalk';
 import * as path from 'path';
-import { generateFromEndpoint } from './generator';
-
+import { createRequire } from "module";
+import { generateFromEndpoint } from './generator.js';
+//import * as pkg from '../package.json';
+const require = createRequire(import.meta.url);
 const pkg = require('../package.json');
+
+const program = new Command();
 program.version(pkg.version);
 
 program
@@ -22,9 +26,14 @@ program
             return;
         }
 
-        const config = require(path.resolve(cmd.configuration));
+        //const config = import(path.resolve(cmd.configuration));
+        //const configContent = fs.readFileSync(path.resolve(cmd.configuration)).toString();
+        //console.log(configContent);
+        //const config = JSON.parse(configContent);
 
-        generateFromEndpoint(config);
+        import('file://' + path.resolve(cmd.configuration))
+            .then(mod => generateFromEndpoint(mod.default));
+        //generateFromEndpoint(config);
     });
 
 const parsed = program.parse(process.argv);

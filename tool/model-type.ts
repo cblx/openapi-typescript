@@ -1,10 +1,10 @@
 import { SchemaObject, SchemasObject } from 'openapi3-ts';
 import { EOL } from 'os';
-import { BaseContext } from './base-context';
-import { OpenApiTypeScriptConfig } from './config';
-import { GenerateSchemaFileOptions } from './generate-schema-file-options';
-import { resolveImportPath } from './resolve-import-path';
-import { SchemaTypeBase } from './schema-type-base';
+import { BaseContext } from './base-context.js';
+import { OpenApiTypeScriptConfig } from './config.js';
+import { GenerateSchemaFileOptions } from './generate-schema-file-options.js';
+import { resolveImportPath } from './resolve-import-path.js';
+import { SchemaTypeBase } from './schema-type-base.js';
 
 export class ModelType extends SchemaTypeBase {
     constructor(

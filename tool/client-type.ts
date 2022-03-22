@@ -1,10 +1,10 @@
 import { PathItemObject } from 'openapi3-ts';
-import { TypeBase } from "./type-base";
+import { TypeBase } from "./type-base.js";
 import * as changeCase from 'change-case'
-import { BaseContext } from './base-context';
-import { ClientMethod } from './client-method';
-import { OpenApiTypeScriptConfig } from './config';
-import { ClientMethodOld } from './client-method-old';
+import { BaseContext } from './base-context.js';
+import { ClientMethod } from './client-method.js';
+import { OpenApiTypeScriptConfig } from './config.js';
+import { ClientMethodOld } from './client-method-old.js';
 import { EOL } from 'os';
 
 export class ClientType extends TypeBase {

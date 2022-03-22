@@ -1,8 +1,8 @@
-import { BaseContext } from './base-context';
-import { ClientType } from './client-type';
-import { GenerateSchemaFileOptions } from './generate-schema-file-options';
-import { ModelType } from './model-type';
-import { SchemaTypeBase } from './schema-type-base';
+import { BaseContext } from './base-context.js';
+import { ClientType } from './client-type.js';
+import { GenerateSchemaFileOptions } from './generate-schema-file-options.js';
+import { ModelType } from './model-type.js';
+import { SchemaTypeBase } from './schema-type-base.js';
 
 
 export class SolutionContext extends BaseContext {

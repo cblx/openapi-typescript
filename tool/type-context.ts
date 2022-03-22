@@ -1,8 +1,8 @@
 import { SchemaObject, SchemasObject } from 'openapi3-ts';
-import { TypeBase } from './type-base';
-import { BaseContext } from './base-context';
+import { TypeBase } from './type-base.js';
+import { BaseContext } from './base-context.js';
 import { EOL } from 'os';
-import { resolveImportPath } from './resolve-import-path';
+import { resolveImportPath } from './resolve-import-path.js';
 
 
 export class TypeContext {

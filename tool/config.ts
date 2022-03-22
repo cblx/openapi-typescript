@@ -1,8 +1,8 @@
-import { ClientType } from './client-type';
-import { ClientMethod } from './client-method';
-import { TypeContext } from './type-context';
-import { ClientMethodOld } from './client-method-old';
-import { GenerateSchemaFileOptions } from './generate-schema-file-options';
+import { ClientType } from './client-type.js';
+import { ClientMethod } from './client-method.js';
+import { TypeContext } from './type-context.js';
+import { ClientMethodOld } from './client-method-old.js';
+import { GenerateSchemaFileOptions } from './generate-schema-file-options.js';
 
 export interface OpenApiTypeScriptConfig {
     url?: string;

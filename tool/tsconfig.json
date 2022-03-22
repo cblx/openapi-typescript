@@ -5,9 +5,10 @@
         "declaration": true,
         "downlevelIteration": true,
         "experimentalDecorators": true,
-        "module": "CommonJs",
+        "module": "ES2020",
         "moduleResolution": "node",
-        "target": "es5",
+        "resolveJsonModule": true,
+        "target": "ES2020",
         "typeRoots": [
             "node_modules/@types"
         ],
