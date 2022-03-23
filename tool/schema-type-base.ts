@@ -1,9 +1,8 @@
-import { SchemaObject, SchemasObject } from "openapi3-ts";
+import { SchemaObject } from "openapi3-ts";
 import { EOL } from "os";
 import { OpenApiTypeScriptConfig } from "./config.js";
 import { GenerateSchemaFileOptions } from "./generate-schema-file-options.js";
 import { TypeBase } from "./type-base.js";
-
 export abstract class SchemaTypeBase extends TypeBase {
     public typeConfig: {
         generateMetadata?: boolean,
@@ -44,41 +43,4 @@ export abstract class SchemaTypeBase extends TypeBase {
     }
 
     abstract writeSchemaFile(options: boolean | GenerateSchemaFileOptions) : string;
-    //  {
-    //     let content = `export const ${this.name}_SCHEMA = ${JSON.stringify(this.schema, null, 4)};${EOL}${EOL}`;
-    //     if (typeof options === "object") {
-    //         if (options.includeRefs) {
-    //             content += this.writeSchemaRefs(allSchemas);
-    //         }
-    //     }
-    //     return { content, references: [] };
-    // }
-
-    // private writeSchemaRefs(allSchemas: SchemasObject) {
-    //     const refsSchemas: { [key: string]: SchemaObject } = {};
-    //     (<any>refsSchemas)[this.id] = "####SELF_REF####";
-    //     //this.grabRefs(this.schema, allSchemas, refsSchemas);
-    //     let content = '';
-        
-    //     content += `${EOL}export const ${this.name}_REFS = ${JSON.stringify(refsSchemas, null, 4)};${EOL}${EOL}`;
-    //     content = content.replace('\"####SELF_REF####\"', `${this.id}_SCHEMA`);
-    //     return content;
-    // }
-
-    // private grabRefs(schema: SchemaObject, allSchemas: SchemasObject, targetContainer: { [key: string]: SchemaObject }) {
-    //     if (!schema.properties) { return; }
-    //     for (const propName in schema.properties) {
-    //         const prop = schema.properties[propName];
-    //         let ref = prop.$ref;
-    //         if ('allOf' in prop && prop.allOf) {
-    //             ref = prop.allOf[0].$ref;
-    //         }
-    //         if(!ref){ continue; }
-    //         let typeName = ref.split('/').reverse()[0];
-    //         if(typeName in targetContainer){ continue; }
-    //         if(!(typeName in allSchemas)){ continue; }
-    //         targetContainer[typeName] = allSchemas[typeName];
-    //         this.grabRefs(allSchemas[typeName], allSchemas, targetContainer);
-    //     }
-    // }
 }

@@ -84,7 +84,7 @@ export class ModelType extends SchemaTypeBase {
                 content = importedSchemasText + content;
 
                 const schemaNames = [
-                    this.id,
+                    this.name,
                     ...context.referencedTypes.map(r => r.name)
                 ]
 
