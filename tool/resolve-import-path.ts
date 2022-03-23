@@ -1,6 +1,6 @@
 import * as path from 'path';
 export function resolveImportPath(params: { tsFile: string, fromDir: string }) {
-    let relativePath = path.relative(params.fromDir, params.tsFile).replace('\\', '/');
+    let relativePath = path.relative(params.fromDir, params.tsFile).replace(/\\/g, '/');
     if (relativePath[0] != '.') {
         if (relativePath[0] != '/') {
             relativePath = '/' + relativePath;
@@ -8,6 +8,6 @@ export function resolveImportPath(params: { tsFile: string, fromDir: string }) {
         relativePath = '.' + relativePath;
     }
     relativePath = relativePath.replace('.ts', '');
-    relativePath = relativePath.replace('.//', './');
+    relativePath = relativePath.replace(/\.\/\//g, './');
     return relativePath;
 }

@@ -1,4 +1,4 @@
-import { SchemaObject, SchemasObject } from 'openapi3-ts';
+import { SchemaObject } from 'openapi3-ts';
 import { TypeBase } from './type-base.js';
 import { BaseContext } from './base-context.js';
 import { EOL } from 'os';
