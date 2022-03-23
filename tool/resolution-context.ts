@@ -1,6 +1,5 @@
 import * as changeCase from 'change-case';
 import { EOL } from 'os';
-
 export class ResolutionContext {
     imports: { [key: string]: boolean; } = {};
     importsPath = '';

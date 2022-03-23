@@ -1,11 +1,8 @@
 import * as changeCase from 'change-case'
-import { SchemaObject } from 'openapi3-ts';
 export abstract class TypeBase {
     name: string;
     fileName: string;
     dir: string = '/';
-
-
     constructor(protected id: string) {
         this.name = id.replace('[]', 'Array');
         let splitted = this.name.split('.');
@@ -20,9 +17,5 @@ export abstract class TypeBase {
     getPath() {
         return `${this.dir}${this.fileName}`;
     }
-
-  
     public abstract write(): string;
-
-
 }

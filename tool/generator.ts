@@ -12,9 +12,6 @@ import { FileManager } from './file-manager.js';
 import { EOL } from 'os';
 import colors from 'chalk';
 
-//import { RequestInfo, RequestInit } from "node-fetch";
-//const fetch = (url: RequestInfo, init?: RequestInit) =>  import("node-fetch").then(({ default: fetch }) => fetch(url, init));
-
 export async function generateFromEndpoint(config: OpenApiTypeScriptConfig) {
     let defEndpoint = config.url;
     let json: OpenAPIObject;

@@ -3,7 +3,6 @@ import { TypeContext } from "./type-context.js";
 import * as changeCase from 'change-case'
 import { OpenApiTypeScriptConfig } from './config.js';
 import { EOL } from 'os';
-
 export class ClientMethod {
     name = '';
     private queryAndPathParameters: ParameterObject[] = [];
@@ -141,4 +140,3 @@ export class ClientMethod {
         return content;
     }
 }
-

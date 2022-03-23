@@ -5,13 +5,10 @@ import colors from 'chalk';
 import * as path from 'path';
 import { createRequire } from "module";
 import { generateFromEndpoint } from './generator.js';
-//import * as pkg from '../package.json';
 const require = createRequire(import.meta.url);
 const pkg = require('../package.json');
-
 const program = new Command();
 program.version(pkg.version);
-
 program
     .option('-c, --configuration <configuration>', 'Configuration File', 'openapi-typescript.config.js')
     .action(function (cmd) {
@@ -26,14 +23,8 @@ program
             return;
         }
 
-        //const config = import(path.resolve(cmd.configuration));
-        //const configContent = fs.readFileSync(path.resolve(cmd.configuration)).toString();
-        //console.log(configContent);
-        //const config = JSON.parse(configContent);
-
         import('file://' + path.resolve(cmd.configuration))
             .then(mod => generateFromEndpoint(mod.default));
-        //generateFromEndpoint(config);
     });
 
 const parsed = program.parse(process.argv);

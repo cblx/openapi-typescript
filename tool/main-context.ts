@@ -3,8 +3,6 @@ import { ClientType } from './client-type.js';
 import { GenerateSchemaFileOptions } from './generate-schema-file-options.js';
 import { ModelType } from './model-type.js';
 import { SchemaTypeBase } from './schema-type-base.js';
-
-
 export class SolutionContext extends BaseContext {
     services: ClientType[] = [];
     constructor() {

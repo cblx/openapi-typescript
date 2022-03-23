@@ -6,7 +6,6 @@ import { ClientMethod } from './client-method.js';
 import { OpenApiTypeScriptConfig } from './config.js';
 import { ClientMethodOld } from './client-method-old.js';
 import { EOL } from 'os';
-
 export class ClientType extends TypeBase {
     ctor = 'constructor(private connector: OpenApiConnector) {}';
     importsSection = [];

@@ -1,9 +1,8 @@
-import { SchemaObject, SchemasObject } from 'openapi3-ts';
+import { SchemaObject } from 'openapi3-ts';
 import { EOL } from 'os';
 import { OpenApiTypeScriptConfig } from './config.js';
 import { GenerateSchemaFileOptions } from './generate-schema-file-options.js';
 import { SchemaTypeBase } from './schema-type-base.js';
-
 export class EnumType extends SchemaTypeBase {
     constructor(
         public readonly id: string,

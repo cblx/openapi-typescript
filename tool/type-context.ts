@@ -3,8 +3,6 @@ import { TypeBase } from './type-base.js';
 import { BaseContext } from './base-context.js';
 import { EOL } from 'os';
 import { resolveImportPath } from './resolve-import-path.js';
-
-
 export class TypeContext {
     referencedTypes: TypeBase[] = [];
     constructor(private baseContext: BaseContext, private typeDefinition: TypeBase) { }

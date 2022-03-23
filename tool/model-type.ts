@@ -1,4 +1,4 @@
-import { SchemaObject, SchemasObject } from 'openapi3-ts';
+import { SchemaObject } from 'openapi3-ts';
 import { EOL } from 'os';
 import { BaseContext } from './base-context.js';
 import { OpenApiTypeScriptConfig } from './config.js';
@@ -102,4 +102,3 @@ export class ModelType extends SchemaTypeBase {
         return content;
     }
 }
-
