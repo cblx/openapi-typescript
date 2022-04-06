@@ -3,6 +3,7 @@ import { TypeBase } from './type-base.js';
 import { BaseContext } from './base-context.js';
 import { EOL } from 'os';
 import { resolveImportPath } from './resolve-import-path.js';
+import * as changeCase from 'change-case'
 export class TypeContext {
     referencedTypes: TypeBase[] = [];
     constructor(private baseContext: BaseContext, private typeDefinition: TypeBase) { }
@@ -38,8 +39,18 @@ export class TypeContext {
             case 'integer': return 'number';
             case 'number': return 'number';
             case 'string': return 'string';
+            case 'object':
+                let props = [];
+                for (let p in schema.properties) {
+                    props.push(this.writeProp(changeCase.paramCase(p), schema.properties[p]));
+                }
+                return `{ ${props.join(', ')} }`;
         }
         return 'any';
+    }
+
+    writeProp(propName: string, prop: SchemaObject){
+        return `'${propName}': ${this.writeName(prop)} ${prop.nullable ? '| null' : ''}`;
     }
 
     writeImports() {

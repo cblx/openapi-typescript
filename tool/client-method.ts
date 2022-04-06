@@ -7,6 +7,7 @@ export class ClientMethod {
     name = '';
     private queryAndPathParameters: ParameterObject[] = [];
     private bodyParameter: SchemaObject = null;
+    private formDataParameter: SchemaObject = null;
     private returnType: SchemaObject = null;
     private preBodyLines: string[] = [];
     private path: string;
@@ -55,6 +56,10 @@ export class ClientMethod {
             if (requestBodyContent) {
                 this.bodyParameter = requestBodyContent.schema;
             }
+            requestBodyContent = (pathItem.requestBody?.content ?? {})['multipart/form-data'];
+            if (requestBodyContent) {
+                this.formDataParameter = requestBodyContent.schema;
+            }
         }
 
         if ('responses' in pathItem && '200' in pathItem.responses && 'content' in pathItem.responses['200'] && 'application/json' in pathItem.responses['200'].content) {
@@ -73,7 +78,7 @@ export class ClientMethod {
     writeParameters(context: TypeContext, spacing: string = '') {
         const pathParameters = this.queryAndPathParameters?.filter(p => p.in == 'path') || [];
         const queryParameters = this.queryAndPathParameters?.filter(p => p.in == 'query') || [];
-        if (!queryParameters.length && !pathParameters.length && !this.bodyParameter) { return ''; }
+        if (!queryParameters.length && !pathParameters.length && !this.bodyParameter && !this.formDataParameter) { return ''; }
 
         let parametersText = `parameters: {${EOL}`;
 
@@ -86,6 +91,9 @@ export class ClientMethod {
         }
         if (this.bodyParameter) {
             parts.push(`${spacing}${spacing}body: ${context.writeName(this.bodyParameter)}`);
+        }else if(this.formDataParameter){
+            parts.push(`${spacing}${spacing}formData: FormData`);
+            parts.push(`${spacing}${spacing}formValues: ${context.writeName(this.formDataParameter)}`);
         }
 
         parametersText += parts.join(`,${EOL}`);
@@ -113,7 +121,11 @@ export class ClientMethod {
         bodyRequest += `    search,${EOL}`;
         if (this.bodyParameter) {
             bodyRequest += `    parameters.body${EOL}`;
-        }else{
+        }
+        else if(this.formDataParameter){
+            bodyRequest += `    parameters.formData${EOL}`;
+        }
+        else{
             bodyRequest += `    undefined${EOL}`;
         }
         bodyRequest += `);${EOL}`;
