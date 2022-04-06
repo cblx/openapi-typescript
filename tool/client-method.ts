@@ -59,6 +59,7 @@ export class ClientMethod {
             requestBodyContent = (pathItem.requestBody?.content ?? {})['multipart/form-data'];
             if (requestBodyContent) {
                 this.formDataParameter = requestBodyContent.schema;
+                this.preBodyLines.push('if(parameters.formValues) { for(let prop in parameters.formValues){ parameters.formData.append(prop, (<any>parameters.formValues)[prop]); } }');
             }
         }
 
@@ -93,7 +94,7 @@ export class ClientMethod {
             parts.push(`${spacing}${spacing}body: ${context.writeName(this.bodyParameter)}`);
         }else if(this.formDataParameter){
             parts.push(`${spacing}${spacing}formData: FormData`);
-            parts.push(`${spacing}${spacing}formValues: ${context.writeName(this.formDataParameter)}`);
+            parts.push(`${spacing}${spacing}formValues?: ${context.writeName(this.formDataParameter)}`);
         }
 
         parametersText += parts.join(`,${EOL}`);
