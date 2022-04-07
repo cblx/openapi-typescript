@@ -42,7 +42,7 @@ export class TypeContext {
             case 'object':
                 let props = [];
                 for (let p in schema.properties) {
-                    props.push(this.writeProp(changeCase.paramCase(p), schema.properties[p]));
+                    props.push(this.writeProp(changeCase.camelCase(p), schema.properties[p]));
                 }
                 return `{ ${props.join(', ')} }`;
         }
