@@ -79,7 +79,10 @@ export class ClientMethod {
     writeParameters(context: TypeContext, spacing: string = '') {
         const pathParameters = this.queryAndPathParameters?.filter(p => p.in == 'path') || [];
         const queryParameters = this.queryAndPathParameters?.filter(p => p.in == 'query') || [];
-        if (!queryParameters.length && !pathParameters.length && !this.bodyParameter && !this.formDataParameter) { return ''; }
+        if (!queryParameters.length 
+            && !pathParameters.length 
+            && !this.bodyParameter 
+            && !this.formDataParameter) { return 'extra?: any'; }
 
         let parametersText = `parameters: {${EOL}`;
 
@@ -98,7 +101,7 @@ export class ClientMethod {
         }
 
         parametersText += parts.join(`,${EOL}`);
-        parametersText += `${EOL}${spacing}}`;
+        parametersText += `${EOL}${spacing}}, extra?: any`;
 
         return parametersText;
     }
@@ -121,15 +124,15 @@ export class ClientMethod {
         bodyRequest += `    \`${this.path}\`,${EOL}`;
         bodyRequest += `    search,${EOL}`;
         if (this.bodyParameter) {
-            bodyRequest += `    parameters.body${EOL}`;
+            bodyRequest += `    parameters.body`;
         }
         else if(this.formDataParameter){
-            bodyRequest += `    parameters.formData${EOL}`;
+            bodyRequest += `    parameters.formData`;
         }
         else{
-            bodyRequest += `    undefined${EOL}`;
+            bodyRequest += `    undefined`;
         }
-        bodyRequest += `);${EOL}`;
+        bodyRequest += `,${EOL}    extra);${EOL}`;
 
         let bodyLines = [...this.preBodyLines];
         bodyLines.push(bodyRequest);
