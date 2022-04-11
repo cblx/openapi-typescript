@@ -42,11 +42,12 @@ export class EnumType extends SchemaTypeBase {
         let content = `export const ${this.name}_SCHEMA = ${JSON.stringify(this.schema, null, 4)};${EOL}${EOL}`;
         if (typeof options === "object") {
             if (options.includeRefs) {
-                const refsSchemas: { [key: string]: string } = {
-                    [this.name]: `${this.name}_SCHEMA`
-                };
-                let refsText = `${EOL}export const ${this.name}_REFS = ${JSON.stringify(refsSchemas, null, 4)};`;
-                refsText = refsText.replace(/"/g,'');
+                let refsText = `${EOL}export const ${this.name}_REFS = {`;
+                const refs = [this];
+                refs.forEach((ref, index) => {
+                    refsText += `${EOL}    '${ref['id']}': ${ref.name}_SCHEMA${index < refs.length -1 ? ',' : ''}`;    
+                });
+                refsText += '}';
                 content += refsText;
             }
         }
