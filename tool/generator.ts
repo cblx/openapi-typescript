@@ -37,7 +37,7 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
         fileManager.write('schemas.ts', `export const schemas = ${JSON.stringify(json.components?.schemas || {}, null, 2)};`);
     }
 
-    const mainContext = new SolutionContext();
+    const mainContext = new SolutionContext(config);
 
     const organizedClients = organizeActionsInClients(json);
 
@@ -54,15 +54,17 @@ export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptCon
         }
     }
 
-    const result = mainContext.genereate();
+    const result = mainContext.generate();
     const indexes: { [path: string]: string } = {};
     for (let filePath in result) {
         const dir = path.dirname(filePath);
+        // preparing index.ts for the type folder
         indexes[dir] = indexes[dir] || '';
         indexes[dir] += `export * from './${path.basename(filePath).replace('.ts', '')}';${EOL}`;
         fileManager.write(filePath, result[filePath]);
     }
     
+    // write index file if configured
     if (config?.generateComponents?.index) {
         for (let indexDir in indexes) {
             const finalPath = path.join(indexDir, 'index.ts');

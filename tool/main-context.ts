@@ -1,32 +1,41 @@
 import { BaseContext } from './base-context.js';
 import { ClientType } from './client-type.js';
+import { OpenApiTypeScriptConfig } from './config.js';
 import { GenerateSchemaFileOptions } from './generate-schema-file-options.js';
 import { ModelType } from './model-type.js';
 import { SchemaTypeBase } from './schema-type-base.js';
 export class SolutionContext extends BaseContext {
     services: ClientType[] = [];
-    constructor() {
+    constructor(private config: OpenApiTypeScriptConfig) {
         super();
     }
 
-    genereate() : { [filePath: string]: string } {
-        const result = {};
+    generate() : { [filePath: string]: string } {
+        const files = {};
         for(let modelId in this.modelsAndEnums)        {
             let model = this.modelsAndEnums[modelId];
-            result[model.getPath()] = model.write();
+            files[model.getPath()] = model.write();
             if(model.typeConfig.generateSchemaFile){
                 //result[model.getSchemaFilePath()] = model.writeSchemaFile(model.typeConfig.generateSchemaFile);
-                this.generateSchemaFile(model, model.typeConfig.generateSchemaFile, result);
+                this.generateSchemaFile(model, model.typeConfig.generateSchemaFile, files);
             }
             if(model.typeConfig.generateMetadataFile){
-                result[model.getMetaFilePath()] = model.writeMetaFile();
+                files[model.getMetaFilePath()] = model.writeMetaFile();
             }
+            if(this.config.hooks?.generatingModelFiles){
+                let customFiles = this.config.hooks.generatingModelFiles(model);
+                for(let fileName in customFiles){
+                    if(fileName in files){ throw `${fileName} already exists`; }
+                    files[fileName] = customFiles[fileName];
+                }
+            }
+            
         }
 
         for(let service of this.services){
-            result[service.getPath()] = service.write();
+            files[service.getPath()] = service.write();
         }
-        return result;
+        return files;
     }
 
     private generateSchemaFile(model: SchemaTypeBase, options: boolean | GenerateSchemaFileOptions, result: { [key: string]: string }){

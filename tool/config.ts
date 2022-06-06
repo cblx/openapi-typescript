@@ -3,6 +3,7 @@ import { ClientMethod } from './client-method.js';
 import { TypeContext } from './type-context.js';
 import { ClientMethodOld } from './client-method-old.js';
 import { GenerateSchemaFileOptions } from './generate-schema-file-options.js';
+import { SchemaTypeBase } from './schema-type-base.js';
 export interface OpenApiTypeScriptConfig {
     url?: string;
     outputDir?: string;
@@ -14,7 +15,11 @@ export interface OpenApiTypeScriptConfig {
         /**
          * Allow to intercept and change write parts of API client functions
          */
-        writingClientMethod?: (method: ClientMethod | ClientMethodOld, bodyLines: string[], context: TypeContext) => any
+        writingClientMethod?: (method: ClientMethod | ClientMethodOld, bodyLines: string[], context: TypeContext) => any,
+        /**
+         * Allow to create other custom files for each model/enum
+         */
+        generatingModelFiles?: (type: SchemaTypeBase) => { [fileName: string ]: string }
     },
     generateComponents?: {
         /**
