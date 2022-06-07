@@ -4,7 +4,7 @@ import { TypeContext } from './type-context.js';
 import { ClientMethodOld } from './client-method-old.js';
 import { GenerateSchemaFileOptions } from './generate-schema-file-options.js';
 import { SchemaTypeBase } from './schema-type-base.js';
-import { ReferenceObject, SchemaObject } from 'openapi3-ts';
+import { ComponentsObject } from 'openapi3-ts';
 export interface OpenApiTypeScriptConfig {
     url?: string;
     outputDir?: string;
@@ -22,9 +22,7 @@ export interface OpenApiTypeScriptConfig {
          */
         generatingModelFiles?: (
             type: SchemaTypeBase, 
-            schemas?: {
-                [schema: string]: SchemaObject | ReferenceObject;
-            }) => { [fileName: string ]: string }
+            components: ComponentsObject) => { [fileName: string ]: string }
     },
     generateComponents?: {
         /**
