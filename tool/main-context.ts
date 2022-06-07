@@ -26,7 +26,7 @@ export class SolutionContext extends BaseContext {
                 files[model.getMetaFilePath()] = model.writeMetaFile();
             }
             if(this.config.hooks?.generatingModelFiles){
-                let customFiles = this.config.hooks.generatingModelFiles(model, this.openApiObject.components);
+                let customFiles = this.config.hooks.generatingModelFiles(model, this.openApiObject.components, this);
                 for(let fileName in customFiles){
                     if(fileName in files){ throw `${fileName} already exists`; }
                     files[fileName] = customFiles[fileName];
