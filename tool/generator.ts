@@ -14,39 +14,42 @@ import colors from 'chalk';
 
 export async function generateFromEndpoint(config: OpenApiTypeScriptConfig) {
     let defEndpoint = config.url;
-    let json: OpenAPIObject;
+    let openApiObject: OpenAPIObject;
     try {
         let response = await fetch(defEndpoint, {
             agent: new Agent({ rejectUnauthorized: false })
         });
-        json = <OpenAPIObject>(await response.json());
+        openApiObject = <OpenAPIObject>(await response.json());
     } catch (err) {
         console.log(colors.red('Could not fetch OpenApi definition from ' + defEndpoint));
         console.log(err.message);
         return;
     }
-    generate(json, config);
+    generate(openApiObject, config);
 }
 
-export async function generate(json: OpenAPIObject, config: OpenApiTypeScriptConfig) {
+export async function generate(openApiObject: OpenAPIObject, config: OpenApiTypeScriptConfig) {
     const fileManager = new FileManager(config.outputDir);
     if (config.generateComponents?.definitionConst) {
-        fileManager.write('definition.ts', `export const openApiDefinition = ${JSON.stringify(json, null, 2)};`);
+        fileManager.write('definition.ts', `export const openApiDefinition = ${JSON.stringify(openApiObject, null, 2)};`);
     }
     if (config.generateComponents?.schemasConst) {
-        fileManager.write('schemas.ts', `export const schemas = ${JSON.stringify(json.components?.schemas || {}, null, 2)};`);
+        fileManager.write('schemas.ts', `export const schemas = ${JSON.stringify(openApiObject.components?.schemas || {}, null, 2)};`);
     }
 
-    const mainContext = new SolutionContext(config);
+    const mainContext = new SolutionContext(
+        openApiObject,
+        config
+    );
 
-    const organizedClients = organizeActionsInClients(json);
+    const organizedClients = organizeActionsInClients(openApiObject);
 
     for (let c in organizedClients) {
         mainContext.services.push(new ClientType(c, organizedClients[c].actions, mainContext, config));
     }
 
-    for (let id in json.components?.schemas) {
-        let schema: SchemaObject = json.components.schemas[id];
+    for (let id in openApiObject.components?.schemas) {
+        let schema: SchemaObject = openApiObject.components.schemas[id];
         if ('enum' in schema) {
             mainContext.modelsAndEnums[id] = new EnumType(id, schema, config);
         } else {

@@ -1,3 +1,4 @@
+import { OpenAPIObject } from 'openapi3-ts';
 import { BaseContext } from './base-context.js';
 import { ClientType } from './client-type.js';
 import { OpenApiTypeScriptConfig } from './config.js';
@@ -6,7 +7,10 @@ import { ModelType } from './model-type.js';
 import { SchemaTypeBase } from './schema-type-base.js';
 export class SolutionContext extends BaseContext {
     services: ClientType[] = [];
-    constructor(private config: OpenApiTypeScriptConfig) {
+    constructor(
+        private openApiObject: OpenAPIObject,
+        private config: OpenApiTypeScriptConfig
+    ) {
         super();
     }
 
@@ -16,14 +20,13 @@ export class SolutionContext extends BaseContext {
             let model = this.modelsAndEnums[modelId];
             files[model.getPath()] = model.write();
             if(model.typeConfig.generateSchemaFile){
-                //result[model.getSchemaFilePath()] = model.writeSchemaFile(model.typeConfig.generateSchemaFile);
                 this.generateSchemaFile(model, model.typeConfig.generateSchemaFile, files);
             }
             if(model.typeConfig.generateMetadataFile){
                 files[model.getMetaFilePath()] = model.writeMetaFile();
             }
             if(this.config.hooks?.generatingModelFiles){
-                let customFiles = this.config.hooks.generatingModelFiles(model);
+                let customFiles = this.config.hooks.generatingModelFiles(model, this.openApiObject.components.schemas);
                 for(let fileName in customFiles){
                     if(fileName in files){ throw `${fileName} already exists`; }
                     files[fileName] = customFiles[fileName];

@@ -4,6 +4,7 @@ import { TypeContext } from './type-context.js';
 import { ClientMethodOld } from './client-method-old.js';
 import { GenerateSchemaFileOptions } from './generate-schema-file-options.js';
 import { SchemaTypeBase } from './schema-type-base.js';
+import { ReferenceObject, SchemaObject } from 'openapi3-ts';
 export interface OpenApiTypeScriptConfig {
     url?: string;
     outputDir?: string;
@@ -19,7 +20,11 @@ export interface OpenApiTypeScriptConfig {
         /**
          * Allow to create other custom files for each model/enum
          */
-        generatingModelFiles?: (type: SchemaTypeBase) => { [fileName: string ]: string }
+        generatingModelFiles?: (
+            type: SchemaTypeBase, 
+            schemas?: {
+                [schema: string]: SchemaObject | ReferenceObject;
+            }) => { [fileName: string ]: string }
     },
     generateComponents?: {
         /**
