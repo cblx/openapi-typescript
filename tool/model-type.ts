@@ -2,7 +2,6 @@ import { SchemaObject } from 'openapi3-ts';
 import { EOL } from 'os';
 import { BaseContext } from './base-context.js';
 import { OpenApiTypeScriptConfig } from './config.js';
-import { EnumType } from './enum-type.js';
 import { GenerateSchemaFileOptions } from './generate-schema-file-options.js';
 import { resolveImportPath } from './resolve-import-path.js';
 import { SchemaTypeBase } from './schema-type-base.js';
