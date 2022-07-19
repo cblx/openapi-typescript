@@ -75,12 +75,19 @@ export interface OpenApiTypeScriptConfig {
      * }
      */
     clients?: {
-        [clientId: string ]: {
-            /**
-             * Use function formats used in v0.17 and previous versions of this tool
-             * This option may be removed in the future.
-             */
-            oldMode: boolean
-        },
+        [clientId: string ]: ClientConfig,
     }
+}
+
+export interface ClientConfig{
+     /**
+     * Use function formats used in v0.17 and previous versions of this tool
+     * This option may be removed in the future.
+     */
+    oldMode?: boolean,
+    interceptor?: (context: { 
+        readonly name: string,
+        fileName: string,
+        className: string
+    }) => void
 }

@@ -3,7 +3,7 @@ import { TypeBase } from "./type-base.js";
 import * as changeCase from 'change-case'
 import { BaseContext } from './base-context.js';
 import { ClientMethod } from './client-method.js';
-import { OpenApiTypeScriptConfig } from './config.js';
+import { ClientConfig, OpenApiTypeScriptConfig } from './config.js';
 import { ClientMethodOld } from './client-method-old.js';
 import { EOL } from 'os';
 export class ClientType extends TypeBase {
@@ -12,7 +12,7 @@ export class ClientType extends TypeBase {
     decoratorsSection = [];
     fieldsSection = [];
     methods: (ClientMethod | ClientMethodOld)[] = [];
-
+    private clientConfig: ClientConfig;
     constructor(
         id: string, 
         private pathItems: { [name: string]: PathItemObject }, 
@@ -20,8 +20,20 @@ export class ClientType extends TypeBase {
         private config: OpenApiTypeScriptConfig
     ){
         super(id);
+        this.clientConfig = config.clients?.[id] ?? config?.clients?.['default'] ?? {};
+        let name = this.name;
         this.fileName = `${changeCase.paramCase(this.name)}.client.ts`;
         this.name = `${this.name}Client`;
+        if(this.clientConfig.interceptor){
+            let context = {
+                name,
+                className: this.name,
+                fileName: this.fileName
+            };
+            this.clientConfig.interceptor(context);
+            this.fileName = context.fileName;
+            this.name = context.className;
+        }
         this.init();
     }
 
