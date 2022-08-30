@@ -7,8 +7,8 @@ import * as changeCase from 'change-case'
 export class TypeContext {
     referencedTypes: TypeBase[] = [];
     constructor(private baseContext: BaseContext, private typeDefinition: TypeBase) { }
-   
-    loadReferenceIfRef(schema: SchemaObject){
+
+    loadReferenceIfRef(schema: SchemaObject) {
         let ref = schema.$ref;
         if (schema.allOf) {
             ref = schema.allOf[0].$ref;
@@ -29,9 +29,9 @@ export class TypeContext {
     }
 
     writeName(schema: SchemaObject) {
-        if(!schema){ return 'any'; }
+        if (!schema) { return 'any'; }
         let refTypeDefinition = this.loadReferenceIfRef(schema);
-        if(refTypeDefinition){ return refTypeDefinition.name; }
+        if (refTypeDefinition) { return refTypeDefinition.name; }
 
         switch (schema.type) {
             case 'array': return `Array<${this.writeName(schema.items)}>`;
@@ -44,12 +44,19 @@ export class TypeContext {
                 for (let p in schema.properties) {
                     props.push(this.writeProp(changeCase.camelCase(p), schema.properties[p]));
                 }
-                return `{ ${props.join(', ')} }`;
+                // Can be a dictionary
+                if (props.length) {
+                    return `{ ${props.join(', ')} }`;
+                } else {
+                    if (schema.additionalProperties) {
+                        return `{ [key: string]: ${this.writeName(schema.additionalProperties)} }`
+                    } else { return 'any'; }
+                }
         }
         return 'any';
     }
 
-    writeProp(propName: string, prop: SchemaObject){
+    writeProp(propName: string, prop: SchemaObject) {
         return `'${propName}': ${this.writeName(prop)} ${prop.nullable ? '| null' : ''}`;
     }
 
@@ -62,7 +69,7 @@ export class TypeContext {
             return `import { ${r.name} } from '${finalPath}';`;
         });
         let rowsText = rows.join(EOL);
-        if(rowsText){ rowsText += EOL; }
+        if (rowsText) { rowsText += EOL; }
         return rowsText;
     }
 }
