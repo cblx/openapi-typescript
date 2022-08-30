@@ -49,7 +49,7 @@ export class TypeContext {
                     return `{ ${props.join(', ')} }`;
                 } else {
                     if (schema.additionalProperties) {
-                        return `{ [key: string]: ${this.writeName(schema.additionalProperties)} }`
+                        return `{ [key: string]: ${this.writeName(<SchemaObject>schema.additionalProperties)} }`
                     } else { return 'any'; }
                 }
         }
