@@ -1,9 +1,9 @@
 import { ComponentsObject, SchemaObject } from 'openapi3-ts';
-import { EnumType } from '../../enum-type';
-import { SolutionContext } from '../../main-context';
-import { ModelType } from '../../model-type';
-import { SchemaTypeBase } from '../../schema-type-base';
-import { TypeContext } from '../../type-context';
+import { EnumType } from '../../tool/enum-type';
+import { SolutionContext } from '../../tool/main-context';
+import { ModelType } from '../../tool/model-type';
+import { SchemaTypeBase } from '../../tool/schema-type-base';
+import { TypeContext } from '../../tool/type-context';
 const tab = '    ';
 export function writeAngularFormCreator(type: SchemaTypeBase, components: ComponentsObject, context: SolutionContext) {
     if (type.schema.enum) { 
@@ -39,8 +39,8 @@ function createEnumOptionsFile(enType: EnumType){
     const path = enType.getPath().replace('.ts', '.options.ts');
     const schema = enType.schema;
     const options: string[] = [];
-    for(let enumIndex = 0; enumIndex < schema.enum.length; enumIndex++){
-        options.push(`{ value:${schema.enum[enumIndex]} , text: '${schema['x-enum-pt'][enumIndex]}' }`);
+    for(let enumIndex = 0; enumIndex < schema.enum!.length; enumIndex++){
+        options.push(`{ value:${schema.enum![enumIndex]} , text: '${schema['x-enum-pt'][enumIndex]}' }`);
     }
     let content = `export const ${enType.name}Options = [
     ${options.join(`,\n${tab}`)}
@@ -59,9 +59,9 @@ function writeProps(model: SchemaTypeBase, components: ComponentsObject, modelCo
         let type: string | undefined = schema.type;
         let withOptions = '';
         if('allOf' in schema){
-            let refName = schema.allOf[0].$ref;
+            let refName = schema.allOf![0].$ref;
             refName = refName.split('/').reverse()[0];
-            let refSchema = components.schemas[refName];
+            let refSchema = components.schemas![refName];
             if('enum' in refSchema && refSchema.enum){
                 type = modelContext.writeName(schema);
                 withOptions = `.withOptions(${type}Options)`;

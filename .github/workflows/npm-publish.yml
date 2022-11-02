@@ -22,6 +22,8 @@ jobs:
       - run: npm ci
       - run: npx tsc --build ./src/tsconfig.json
       - run: npx tsc --build ./tool/tsconfig.json
+      - run: npx tsc --build ./utils/tsconfig.json
+      - run: rm -rf ./dist-utils/tool
       - id: get-version
         uses: actions/github-script@0.9.0
         with:

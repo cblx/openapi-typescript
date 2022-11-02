@@ -40,6 +40,7 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
-    "dist-tool"
+    "dist-tool",
+    "dist-utils"
   ]
 }
