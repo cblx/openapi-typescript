@@ -1,11 +1,5 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
-
 name: Node.js Package
 
-# on:
-#   release:
-#     types: [created]
 on:
   push:
     branches: 
@@ -24,15 +18,7 @@ jobs:
       - run: npx tsc --build ./tool/tsconfig.json
       - run: npx tsc --build ./utils/tsconfig.json
       - run: rm -rf ./dist-utils/tool
-      - id: get-version
-        uses: actions/github-script@0.9.0
-        with:
-          script: |
-            const branch = '${{github.ref}}';
-            console.log(branch);
-            const id = branch.split('/').reverse()[0];
-            core.setOutput('id', id);
-      - run: npm version ${{steps.get-version.outputs.id}} --no-git-tag-version
+      - run: npm version ${GITHUB_REF##*/} --no-git-tag-version
       - run: npm pack
       - uses: actions/upload-artifact@v2.1.4
         with:
@@ -49,15 +35,8 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - id: get-version
-        uses: actions/github-script@0.9.0
-        with:
-          script: |
-            const branch = '${{github.ref}}';
-            console.log(branch);
-            const id = branch.split('/').reverse()[0];
-            core.setOutput('id', id);
-      - run: npm publish cblx-br-openapi-typescript-${{steps.get-version.outputs.id}}.tgz
+
+      - run: npm publish cblx-br-openapi-typescript-${GITHUB_REF##*/}.tgz
         working-directory: artifact/artifact
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
