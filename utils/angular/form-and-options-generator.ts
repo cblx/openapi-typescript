@@ -70,14 +70,16 @@ function writeProps(model: SchemaTypeBase, components: ComponentsObject, modelCo
         let defaultValue = model.schema.default;
         let type: string | undefined = schema.type;
         let withOptions = '';
-        if('allOf' in schema){
-            let refName = schema.allOf![0].$ref;
+        let refName: string | undefined;
+        if ('allOf' in schema) { refName = schema.allOf![0].$ref!; }
+        if ('$ref' in schema) { refName = schema.$ref; }
+        if (refName) {
             refName = refName.split('/').reverse()[0];
             let refSchema = components.schemas![refName];
-            if('enum' in refSchema && refSchema.enum){
+            if ('enum' in refSchema && refSchema.enum) {
                 type = modelContext.writeName(schema);
                 withOptions = `.withOptions(${type}Options)`;
-                
+
             }
         }
         let withMaxLength = ''
