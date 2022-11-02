@@ -5,9 +5,21 @@ import { ModelType } from '../../tool/model-type';
 import { SchemaTypeBase } from '../../tool/schema-type-base';
 import { TypeContext } from '../../tool/type-context';
 const tab = '    ';
-export function writeAngularFormCreator(type: SchemaTypeBase, components: ComponentsObject, context: SolutionContext) {
+
+export interface AngularUtilsOptions{
+    enumDescriptionExtension: string
+}
+
+export function writeAngularFormCreator(
+    type: SchemaTypeBase, 
+    components: ComponentsObject, 
+    context: SolutionContext,
+    utilOptions: AngularUtilsOptions = { 
+        enumDescriptionExtension: 'x-enum-description'
+    }
+) {
     if (type.schema.enum) { 
-        return createEnumOptionsFile(<EnumType>type);
+        return createEnumOptionsFile(<EnumType>type, utilOptions);
     }
     const customFiles: { [path: string]: string } = {};
     const model = <ModelType>type;
@@ -34,13 +46,13 @@ export function create${model.name}Form(){
     return customFiles;
 }
 
-function createEnumOptionsFile(enType: EnumType){
+function createEnumOptionsFile(enType: EnumType, utilOptions: AngularUtilsOptions){
     const customFiles: { [path: string]: string } = {};
     const path = enType.getPath().replace('.ts', '.options.ts');
     const schema = enType.schema;
     const options: string[] = [];
     for(let enumIndex = 0; enumIndex < schema.enum!.length; enumIndex++){
-        options.push(`{ value:${schema.enum![enumIndex]} , text: '${schema['x-enum-pt'][enumIndex]}' }`);
+        options.push(`{ value:${schema.enum![enumIndex]} , text: '${schema[utilOptions.enumDescriptionExtension][enumIndex]}' }`);
     }
     let content = `export const ${enType.name}Options = [
     ${options.join(`,\n${tab}`)}
