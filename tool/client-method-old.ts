@@ -31,13 +31,13 @@ export class ClientMethodOld {
         this.name = id;
 
         this.path = pathItem.path;
-        let searchPart = 'let search = undefined;';
+        let searchPart = 'const search = undefined;';
         if ('parameters' in pathItem) {
             this.queryAndPathParameters = <ParameterObject[]>pathItem.parameters;
             const parameters = pathItem.parameters;
             let queryParameters = <ParameterObject[]>parameters.filter((p: ParameterObject) => p.in == 'query');
             if (queryParameters.length) {
-                searchPart = 'let search = deleteUndefineds({ ';
+                searchPart = 'const search = deleteUndefineds({ ';
                 searchPart += queryParameters.map(p => `${this.getParamName(p.name)}: parameters.${this.getParamName(p.name)}`).join(', ');
                 searchPart += ' })';
             }
