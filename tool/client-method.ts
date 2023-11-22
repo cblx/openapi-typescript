@@ -59,7 +59,7 @@ export class ClientMethod {
             requestBodyContent = (pathItem.requestBody?.content ?? {})['multipart/form-data'];
             if (requestBodyContent) {
                 this.formDataParameter = requestBodyContent.schema;
-                this.preBodyLines.push('if(parameters.formValues) { for(let prop in parameters.formValues){ parameters.formData.append(prop, (<any>parameters.formValues)[prop]); } }');
+                this.preBodyLines.push('if(parameters.formValues) { for(const prop in parameters.formValues){ parameters.formData.append(prop, (<any>parameters.formValues)[prop]); } }');
             }
         }
 
