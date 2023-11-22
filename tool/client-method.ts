@@ -82,7 +82,7 @@ export class ClientMethod {
         if (!queryParameters.length 
             && !pathParameters.length 
             && !this.bodyParameter 
-            && !this.formDataParameter) { return 'extra?: any'; }
+            && !this.formDataParameter) { return 'extra?: unknown'; }
 
         let parametersText = `parameters: {${EOL}`;
 
@@ -101,7 +101,7 @@ export class ClientMethod {
         }
 
         parametersText += parts.join(`,${EOL}`);
-        parametersText += `${EOL}${spacing}}, extra?: any`;
+        parametersText += `${EOL}${spacing}}, extra?: unknown`;
 
         return parametersText;
     }
