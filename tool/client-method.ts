@@ -114,6 +114,9 @@ export class ClientMethod {
     }
 
     writeReturnType(context: TypeContext) {
+        if(!this.returnType){
+            return `Promise<void>`;
+        }
         return `Promise<${context.writeName(this.returnType)}>`;
     }
 
